@@ -1,0 +1,42 @@
+#registrationForm, #loginForm {
+	display: block;
+	position: relative;
+}
+
+#registrationForm  .preloader, #loginForm  .preloader {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	opacity: 0.5;
+	display: none;
+	z-index: 2;
+	background: #FFF url("./ajax-loader.gif") center center no-repeat;
+}
+
+#registrationForm.lr-form, #loginForm .lr-form {
+	width: 100%
+}
+
+#registrationForm  label, #loginForm  label {
+	display: none
+}
+
+#registrationForm  label.error, #loginForm label.error {
+	display: block;
+	color: red
+}
+
+#registrationForm input, #loginForm input {
+	width: 98%;
+	font-family: Verdana;
+	font-style: normal;
+	font-size: 14px;
+	color: #626262;
+	border: 1px solid #d8d8d8
+}
+
+#registrationForm.lr-form input, #loginForm.lr-form input {
+	padding: 15px;
+}
