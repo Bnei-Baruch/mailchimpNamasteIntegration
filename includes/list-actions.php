@@ -7,7 +7,8 @@ function UpdateMailChimpParam($userId = NULL) {
 			'FNAME' => $fieldList ['first_name'] ["val"],
 			'LNAME' => $fieldList ['last_name'] ["val"],
 			'CITY' => $fieldList ['city'] ["val"],
-			'COUNTRY' => $fieldList ['country'] ["val"] 
+			'COUNTRY' => $fieldList ['country'] ["val"],
+			'SCORES' => $fieldList ['scores'] ["val"] 
 	);
 	$defParam = array (
 			'merge_vars' => $mergeVars,
