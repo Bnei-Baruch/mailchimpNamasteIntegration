@@ -1,4 +1,14 @@
 <?php
+function UpdateMailChimpScores($userId = NULL, $lastScores = 0) {
+	$userId = ($userId == NULL) ? get_current_user_id () : $userId;
+	
+	$scores = get_user_meta($userId, 'namaste_points', true);
+	
+	$sendObj = new MailChimpSend ( 'setUserData');
+	$sendObj->parameters ['merge_vars'] = array ( 'SCORES' => $scores );
+	$request = $sendObj->SendToMailChimp ();
+}
+
 function UpdateMailChimpParam($userId = NULL) {
 	$userId = ($userId == NULL) ? get_current_user_id () : $userId;
 	$fieldList = UserProfile_GetDefaultFieldes ( $userId );
@@ -7,8 +17,7 @@ function UpdateMailChimpParam($userId = NULL) {
 			'FNAME' => $fieldList ['first_name'] ["val"],
 			'LNAME' => $fieldList ['last_name'] ["val"],
 			'CITY' => $fieldList ['city'] ["val"],
-			'COUNTRY' => $fieldList ['country'] ["val"],
-			'SCORES' => $fieldList ['scores'] ["val"] 
+			'COUNTRY' => $fieldList ['country'] ["val"]
 	);
 	$defParam = array (
 			'merge_vars' => $mergeVars,
@@ -46,8 +55,8 @@ function synchronization_wp_user() {
 	 * if(!is_user_logged_in() || get_user_meta(get_current_user_id(), 'updated_from_bp', true) == '1')
 	 * return;
 	 *
-	 * $last_name = bp_get_profile_field_data( array( 'field' => 'Фамилия', 'user_id' => get_current_user_id()));
-	 * $first_name = bp_get_profile_field_data( array( 'field' => 'Имя', 'user_id' => get_current_user_id()));
+	 * $last_name = bp_get_profile_field_data( array( 'field' => 'Ð¤Ð°Ð¼Ð¸Ð»Ð¸Ñ�', 'user_id' => get_current_user_id()));
+	 * $first_name = bp_get_profile_field_data( array( 'field' => 'Ð˜Ð¼Ñ�', 'user_id' => get_current_user_id()));
 	 * $display_name = (isset($last_name) ? $last_name.' '.$first_name : $first_name);
 	 *
 	 * wp_update_user(array(

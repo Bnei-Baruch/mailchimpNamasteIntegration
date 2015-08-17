@@ -1,5 +1,5 @@
 <?php
-function AddCourseToMailChimp( $post_ID, $post) {
+function AddCourseToMailChimp($post_ID, $post) {
 	$condition = array (
 			'field' => 'COURSES',
 			'op' => 'like',
@@ -7,7 +7,9 @@ function AddCourseToMailChimp( $post_ID, $post) {
 	);
 	$segParam = array (
 			'match' => 'all',
-			'conditions' => array($condition) 
+			'conditions' => array (
+					$condition 
+			) 
 	);
 	$optsParam = array (
 			'type' => 'saved',
@@ -15,27 +17,19 @@ function AddCourseToMailChimp( $post_ID, $post) {
 			'segment_opts' => $segParam 
 	);
 	$sendObj = new MailChimpSend ( 'createSegment' );
-	$sendObj->parameters['opts'] = $optsParam;
+	$sendObj->parameters ['opts'] = $optsParam;
 	$sendObj->SendToMailChimp ();
 }
 function UpdateUserOnMailChimp($studentId, $courseId, $status) {
+	global $wpdb;
 	$wpCurrentUser = wp_get_current_user ();
-	if ($status == 'enrolled') {
-		$sendGetUserObj = new MailChimpSend ( 'getUserData', $wpCurrentUser->user_email );
-		
-		$userMChObjJson = $sendGetUserObj->SendToMailChimp ();
-		$userMChObjJson = json_decode ( $userMChObjJson )->data;
-		
-		$sOldCourses = $userMChObjJson [0]->merges->COURSES;
-		$sNewCourse = '[' . $courseId . ']';
-		$pos = strripos ( $sOldCourses, $sNewCourse );
-		if ($pos === false) {
-			// Ð½Ðµ Ð¿Ð¾Ð´Ð¿Ð¸Ñ�Ð°Ð½ -> Ð¿Ð¾Ð´Ð¿Ð¸Ñ�Ñ‹Ð²Ð°ÐµÐ¼
-			$sendObj = new MailChimpSend ( 'setUserData' );
-			$sendObj->parameters->merge_vars->COURSES = $sOldCourses . $sNewCourse;
-			
-			$sendObj->SendToMailChimp ();
-		}
+	if ($status == 'enrolled') {	
+		$aOldCourses = $wpdb->get_col ( $wpdb->prepare ( "SELECT course_id FROM " . NAMASTE_STUDENT_COURSES . "
+						 	WHERE user_id = %d AND status = %d", $studentId, 'enrolled' ) );
+		$sCourses = '[' . implode ( "],[", $aOldCourses ) . ']';
+		$sendObj = new MailChimpSend ( 'setUserData' );
+		$sendObj->parameters ["merge_vars"]->COURSES = $sCourses;
+		$sendObj->SendToMailChimp ();
 	}
 }
 

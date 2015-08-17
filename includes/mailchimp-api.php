@@ -3,6 +3,7 @@ class MailChimpSend {
 	public $metodId;
 	private $MChMetodEnum = array (
 			'createSegment' => 'lists/segment-add.json',
+			'removeSegment' => 'lists/segment-del.json',
 			'getSegments' => 'lists/segments.json',
 			'getUserData' => 'lists/member-info.json',
 			'setUserData' => 'lists/update-member.json',
