@@ -40,8 +40,8 @@ function UserProfile_GetDefaultFieldes($user_id = 0) {
 	if ($user_id == 0)
 		return $fieldList;
 	$currentUser = get_user_by ( "id", $user_id );
-	$fieldList ['last_name'] ['val'] = $currentUser->get ( "user_lastname" );
-	$fieldList ['first_name'] ['val'] = $currentUser->get ( "user_firstname" );
+	$fieldList ['last_name'] ['val'] = $currentUser->last_name;
+	$fieldList ['first_name'] ['val'] = $currentUser->first_name;
 	$fieldList ['display_name'] ['val'] = $currentUser->data->display_name;
 	$fieldList ['user_email'] ['val'] = $currentUser->data->user_email;
 	
