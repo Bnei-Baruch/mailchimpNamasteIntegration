@@ -68,7 +68,7 @@ class RregistrationFormShortcodeClass {
 					fieldListBP => $fieldListBP,
 					fieldListWP => $fieldListWP 
 			);
-			$errors = bp_core_signup_user ( $fieldListWP ['user_login'], $fieldListWP ['user_pass'], $fieldListWP ['user_email'], $usermeta );
+			$errors = bp_core_signup_user ( $fieldListWP ['user_login'], $fieldListWP ['user_pass'], $fieldListWP ['user_email'], $fieldListWP );
 			if (! is_wp_error ( $errors )) {
 				// Success
 				$return ['result'] = true;

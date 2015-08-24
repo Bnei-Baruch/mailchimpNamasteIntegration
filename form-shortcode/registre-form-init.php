@@ -1,6 +1,6 @@
 <?php
-define ( 'REGFORM_DIR', untrailingslashit ( dirname ( __FILE__ ) ) );
-define ( 'REGFORM_DIR_URL', untrailingslashit ( plugins_url ( '', __FILE__ ) ) );
+define ( 'REGFORM_DIR', plugin_dir_path ( __FILE__ ) ) ;
+define ( 'REGFORM_DIR_URL', plugin_dir_url ( __FILE__ ) );
 
 require_once REGFORM_DIR . '/functions.php';
 require_once REGFORM_DIR . '/renderHtml.php';
