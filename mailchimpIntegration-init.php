@@ -39,8 +39,7 @@ add_action ( 'namaste_earned_points', 'UpdateMailChimpScores', 10, 2);
 
 function mailChimpInt_addToMailChimp($user_id, $user_password, $usermeta) {
 	$user = get_user_by ( "id", $user_id );
-	UserProfile_SetDefaultFieldes ( $usermeta ["meta"] ["fieldListWP"], $usermeta ["meta"] ["fieldListBP"], $user_id );
-	wp_new_user_notification ( $user->id, $user_password );
+	//wp_new_user_notification ( $user->id, $user_password );
 	UpdateMailChimpParam ( $user_id );
 }
 function mailChimpInt_init() {
