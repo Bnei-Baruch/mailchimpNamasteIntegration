@@ -2,7 +2,7 @@
 /* It's base on LoginWithAjax plugin - maybe more better to use this plugin for extending class */
 class RregistrationFormShortcodeClass {
 	public static function login($user_login, $user_password) {
-		$return = array ();		
+		$return = array ();
 		$user_login = get_user_by_email ( $user_login )->data->user_login;
 		if (! empty ( $user_login ) && ! empty ( $user_password ) && trim ( $user_login ) != '' && trim ( $user_password ) != '') {
 			$credentials = array (
@@ -43,10 +43,10 @@ class RregistrationFormShortcodeClass {
 	 */
 	public static function register($fieldListWP, $fieldListBP, $pass_conf) {
 		$return = array ();
-		if( $pass_conf != $fieldListWP['user_pass']){
+		if ($pass_conf != $fieldListWP ['user_pass']) {
 			$return ['result'] = false;
 			$return ['error'] = __ ( 'Password not confirmed.', 'login' );
-			$return ['msg'] = $fieldListWP['user_pass'];
+			$return ['msg'] = $fieldListWP ['user_pass'];
 			$return ['$pass_conf'] = $pass_conf;
 			return $return;
 		}
@@ -64,17 +64,13 @@ class RregistrationFormShortcodeClass {
 				$return ['error'] = __ ( 'This email was registred.', 'login' );
 				return $return;
 			}
-			$usermeta = array (
-					fieldListBP => $fieldListBP,
-					fieldListWP => $fieldListWP 
+			$fieldList = array (
+					fieldListWP => $fieldListWP,
+					fieldListBP => $fieldListBP 
 			);
-// 			$usermeta['profile_field_ids'] = "1,2";
-// 			$usermeta['field_1'] = $fieldListWP['first_name'];
-// 			$usermeta['field_2'] = $fieldListWP['last_name'];
-			$errors = bp_core_signup_user ( $fieldListWP ['user_login'], $fieldListWP ['user_pass'], $fieldListWP ['user_email'], $usermeta );
+			$errors = bp_core_signup_user ( $fieldListWP ['user_login'], $fieldListWP ['user_pass'], $fieldListWP ['user_email'], $fieldList );
 			if (! is_wp_error ( $errors )) {
 				// Success
-                UserProfile_SetDefaultFieldes ( $usermeta ["fieldListWP"], $usermeta ["fieldListBP"], $errors );
 				$return ['result'] = true;
 				$return ['userId'] = $errors;
 				$return ['message'] = __ ( 'Registration complete. Please check your e-mail.', 'login' );

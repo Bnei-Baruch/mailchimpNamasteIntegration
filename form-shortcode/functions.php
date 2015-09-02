@@ -49,10 +49,11 @@ function UserProfile_GetDefaultFieldes($user_id = 0) {
 }
 function UserProfile_SetDefaultFieldes($fieldListWP, $fieldListBP, $user_id = 1) {
 	if ($fieldListWP != null) {
-		foreach ( $fieldListWP as $key => $val ) {
-			update_user_meta ( $user_id, $key, $val );
-		}
+		$fieldListWP['ID'] = $user_id;
+		$fieldListWP['display_name'] = bp_core_get_user_displayname( $user_id );
+		wp_update_user($fieldListWP);
 	}
+	
 	$groupParam = array (
 			'user_id' => $user_id,
 			'fetch_fields' => true,
