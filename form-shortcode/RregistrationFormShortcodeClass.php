@@ -68,9 +68,13 @@ class RregistrationFormShortcodeClass {
 					fieldListBP => $fieldListBP,
 					fieldListWP => $fieldListWP 
 			);
+// 			$usermeta['profile_field_ids'] = "1,2";
+// 			$usermeta['field_1'] = $fieldListWP['first_name'];
+// 			$usermeta['field_2'] = $fieldListWP['last_name'];
 			$errors = bp_core_signup_user ( $fieldListWP ['user_login'], $fieldListWP ['user_pass'], $fieldListWP ['user_email'], $usermeta );
 			if (! is_wp_error ( $errors )) {
 				// Success
+                UserProfile_SetDefaultFieldes ( $usermeta ["fieldListWP"], $usermeta ["fieldListBP"], $errors );
 				$return ['result'] = true;
 				$return ['userId'] = $errors;
 				$return ['message'] = __ ( 'Registration complete. Please check your e-mail.', 'login' );
