@@ -18,7 +18,7 @@ class MailChimpSend {
 		$mchId = get_option ( 'mailChimpConstant' )['mailchimpId'];
 		$mchId = $mchId ? $mchId : '0b55fcc6dd' ;
 		
-		$userEmail = ($userEmail == null) ? get_user_meta ( get_current_user_id(), 'user_email', true ) : $userEmail;
+		$userEmail = ($userEmail == null) ? get_userdata( get_current_user_id())->data->user_email : $userEmail;
 		$emailObj = new StdClass ();
 		$mergeVarsObj = new StdClass ();
 		

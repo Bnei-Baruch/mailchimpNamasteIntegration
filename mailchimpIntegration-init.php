@@ -27,27 +27,33 @@ add_action ( 'mailchimp_send', 'synchronization_wp_user' );
 add_action ( 'profile_update', 'UpdateMailChimpParam' );
 add_action ( 'xprofile_updated_profile', 'UpdateMailChimpParam' );
 
-add_action ( 'bp_core_activated_user', 'mailChimpInt_addToMailChimp', 10, 3 );
-add_action ( 'bp_core_signup_user', 'mailChimpInt_addToMailChimp', 10, 3 );
+add_action ( 'bp_core_activated_user', 'mailChimpInt_addToMailChimp', 100, 3 );
 
 add_action ( 'delete_user', 'UnsubscribeMailChimp' );
 
-add_action ( 'namaste_enrolled_course', 'UpdateUserOnMailChimp', 10, 3);
-add_action ( 'publish_namaste_course', 'AddCourseToMailChimp', 10, 2);
+add_action ( 'namaste_enrolled_course', 'UpdateUserOnMailChimp', 10, 3 );
+add_action ( 'publish_namaste_course', 'AddCourseToMailChimp', 10, 2 );
 
-add_action ( 'namaste_earned_points', 'UpdateMailChimpScores', 10, 2);
+add_action ( 'namaste_earned_points', 'UpdateMailChimpScores', 10, 2 );
 
-function mailChimpInt_addToMailChimp($user_id, $user_password, $usermeta) {
-	$user = get_user_by ( "id", $user_id );
-	//wp_new_user_notification ( $user->id, $user_password );
+function mailChimpInt_addToMailChimp($user_id, $key, $user) {
+	wp_new_user_notification ( $user_id, __ ( 'Your password' ) );
+	UserProfile_SetDefaultFieldes ( $user['meta']['fieldListWP'], $user['meta']['fieldListBP'], $user_id );
 	UpdateMailChimpParam ( $user_id );
 }
+function rightToLogFileDavgur_PL($logText) {
+	$msg = $logText;
+	$path = MAILCHIMPINT_DIR . '/DavgurLog.txt';
+	$f = fopen ( $path, "a+" );
+	fwrite ( $f, $msg );
+	fclose ( $f );
+}
 function mailChimpInt_init() {
-
-/*	
- 	$group = bp_xprofile_get_groups ( $groupParam )[0];
-	BP_XProfile_Field::delete_for_group($group->id);
-*/
+	
+	/*
+	 * $group = bp_xprofile_get_groups ( $groupParam )[0];
+	 * BP_XProfile_Field::delete_for_group($group->id);
+	 */
 	// $a = __FILE__;
 	// create new top-level menu
 	// add_options_page ( 'Integration with MailChimp dg', 'Integration with MailChimp', 'administrator', 'plugins.mailchimp-bp-integrator', 'my_plugin_options' );
