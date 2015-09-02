@@ -44,6 +44,11 @@ function mailChimpInt_addToMailChimp($user_id, $user_password, $usermeta) {
 	UpdateMailChimpParam ( $user_id );
 }
 function mailChimpInt_init() {
+
+/*	
+ 	$group = bp_xprofile_get_groups ( $groupParam )[0];
+	BP_XProfile_Field::delete_for_group($group->id);
+*/
 	// $a = __FILE__;
 	// create new top-level menu
 	// add_options_page ( 'Integration with MailChimp dg', 'Integration with MailChimp', 'administrator', 'plugins.mailchimp-bp-integrator', 'my_plugin_options' );

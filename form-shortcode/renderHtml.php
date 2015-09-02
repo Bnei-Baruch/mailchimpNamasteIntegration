@@ -8,6 +8,11 @@ function registerForm_func($args) {
 	$fieldListNew = array ();
 	
 	foreach ( $fieldList as $key => $val ) {
+		$sModalHtml = "<form id=\"formAddEmptyXProfile\">";
+		$sModalHtml .= "<input type=\"text\" name=\"country\" \\>";
+		$sModalHtml .= "<input type=\"text\" name=\"city\" \\>";
+		$sModalHtml .= "</form>";
+		$sModalHtml .= "</form>";
 		$fieldType = 'wp';
 		$formType = 'text';
 		// TODO:David - this is crutch for separate default & customise properties
