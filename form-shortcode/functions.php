@@ -50,7 +50,8 @@ function UserProfile_GetDefaultFieldes($user_id = 0) {
 function UserProfile_SetDefaultFieldes($fieldListWP, $fieldListBP, $user_id = 1) {
 	if ($fieldListWP != null) {
 		$fieldListWP['ID'] = $user_id;
-		$fieldListWP['display_name'] = bp_core_get_user_displayname( $user_id );
+		//If need more complexy display_name can use - bp_core_get_user_displayname
+		$fieldListWP['display_name'] = $fieldListWP['last_name'].' '.$fieldListWP['first_name'];  
 		wp_update_user($fieldListWP);
 	}
 	
