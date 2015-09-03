@@ -36,10 +36,7 @@ add_action ( 'publish_namaste_course', 'AddCourseToMailChimp', 10, 2 );
 
 add_action ( 'namaste_earned_points', 'UpdateMailChimpScores', 10, 2 );
 
-add_action ( 'save_post_namaste', array (
-		'CreateGroupAndForumForCourse',
-		'SavePost' 
-), 99, 3 );
+add_action ( 'save_post_namaste_course', 'CreateGroupAndForumForCourse::SavePost', 99, 3 );
 
 add_action ( 'namaste_enrolled_course', function ($a, $b, $c) {
 	UpdateUserOnMailChimp ( $a, $b, $c );
@@ -48,7 +45,7 @@ add_action ( 'namaste_enrolled_course', function ($a, $b, $c) {
 
 // add_action ( 'updated_namaste_unenroll_meta', 'CreateGroupAndForumForCourse::UnsubscribeCourse');
 function mailChimpInt_addToMailChimp($user_id, $key, $user) {
-	wp_new_user_notification ( $user_id, __( 'Your password' ) );
+	wp_new_user_notification ( $user_id, __ ( 'Your password' ) );
 	UserProfile_SetDefaultFieldes ( $user ['meta'] ['fieldListWP'], $user ['meta'] ['fieldListBP'], $user_id );
 	UpdateMailChimpParam ( $user_id );
 }

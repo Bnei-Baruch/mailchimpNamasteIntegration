@@ -1,12 +1,9 @@
 <?php
-
 class CreateGroupAndForumForCourse {
-	static public function SavePost($post_id) {
-		$post = get_post ( $post_id );
+	static public function SavePost($post_id, $post, $update) {
 		
 		if (wp_is_post_revision ( $post_id ) || $post->post_status != 'publish' || $post->post_type != 'namaste_course')
 			return;
-		
 		$meta = get_post_meta ( $post_id, 'buddypress_id', true );
 		
 		if (empty ( $meta )) {
@@ -40,8 +37,8 @@ class CreateGroupAndForumForCourse {
 		global $wpdb;
 		$group_id = get_post_meta ( $course_id, 'buddypress_id', true );
 		// Get BuddyPress
-		$bp    = buddypress();
-		$group = $wpdb->get_row( $wpdb->prepare( "SELECT g.* FROM {$bp->groups->table_name} g WHERE g.id = %d", $group_id ) );
+		$bp = buddypress ();
+		$group = $wpdb->get_row ( $wpdb->prepare ( "SELECT g.* FROM {$bp->groups->table_name} g WHERE g.id = %d", $group_id ) );
 		
 		groups_invite_user ( array (
 				'user_id' => $student_id,
@@ -55,10 +52,9 @@ class CreateGroupAndForumForCourse {
 		bbp_add_user_forum_subscription ( bbp_get_current_user_id (), $forums [0] );
 	}
 	static public function UnsubscribeCourse($meta_id, $post_id, $meta_key, $meta_value) {
-		//bbp_remove_user_forum_subscription ( get_current_user_id (), $_POST ['unsubscribe'] );
+		// bbp_remove_user_forum_subscription ( get_current_user_id (), $_POST ['unsubscribe'] );
 	}
-	private static function sendEmail(){
-		
+	private static function sendEmail() {
 	}
 }
 ?>
