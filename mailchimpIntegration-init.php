@@ -34,7 +34,7 @@ add_action ( 'delete_user', 'UnsubscribeMailChimp' );
 
 add_action ( 'publish_namaste_course', 'AddCourseToMailChimp', 10, 2 );
 
-add_action ( 'namaste_earned_points', 'UpdateMailChimpScores', 10, 2 );
+add_action ( 'namaste_earned_points', 'UpdateMailChimpScores');
 
 add_action ( 'save_post_namaste_course', 'CreateGroupAndForumForCourse::SavePost', 99, 3 );
 

@@ -9,8 +9,8 @@ jQuery(document).ready(function() {
 			userData : $container.serialize()
 		};
 		function callback(data) {
-			if (data && data.result)
-				window.location.search = "successful=true";
+			 if (data && data.result)
+			 window.location.search = "successful=true";
 		}
 		sendRequest(data, callback, $container);
 	}
@@ -22,8 +22,8 @@ jQuery(document).ready(function() {
 			userData : $container.serialize()
 		};
 		function callback(data) {
-			if (data && data.result)
-				window.location.replace(window.location.origin);
+			 if (data && data.result)
+			 window.location.replace(window.location.origin);
 		}
 		sendRequest(data, callback, $container);
 	}
