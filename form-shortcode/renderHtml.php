@@ -1,8 +1,7 @@
 <?php
-load_plugin_textdomain ( 'cfef', false, REGFORM_DIR . '/languages' );
 function registerForm_func($args) {
 	if (is_user_logged_in ())
-		return "<h1>is_user_logged_in</h1>";
+		return '<h1>' . __( 'The user is logged in.', 'cfef' ) . '</h1>';
 	$fieldsId = get_option ( 'mailChimpFieldList' );
 	$fieldList = array_merge ( UserProfile_GetDefaultFieldes (), $fieldsId );
 	$fieldListNew = array ();
@@ -77,7 +76,7 @@ function registerForm_func($args) {
 }
 function loginForm_func($args) {
 	if (is_user_logged_in ())
-		return "<h1>is_user_logged_in</h1>";
+		return '<h1>' . __( 'The user is logged in.', 'cfef' ) . '</h1>';
 	$str = '<form class="lr-form" id="loginForm" actoin="#" metod="post">';
 	$str .= '<div class="preloader"></div>';
 	$str .= '<div class="errorMsg" style="color: red;display: none;"></div>';
