@@ -1,6 +1,5 @@
 <?php
-load_plugin_textdomain( 'cfef', false, basename( dirname( __FILE__ ) ) . 'languages/' );
-
+load_plugin_textdomain( 'cfef', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 define ( 'REGFORM_DIR', plugin_dir_path ( __FILE__ ) ) ;
 define ( 'REGFORM_DIR_URL', plugin_dir_url ( __FILE__ ) );
 

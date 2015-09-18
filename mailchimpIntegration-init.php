@@ -1,15 +1,12 @@
 <?php
 /*
  * Plugin Name: AAAMailChimp Integration(Davgur)
- * Description: Ð”Ð¾Ð±Ð°Ð²Ð»Ñ�ÐµÑ‚ Ñ‡ÐµÐºÐ±Ð¾ÐºÑ� "ÐŸÐ¾Ð´Ð¿Ð¸Ñ�ÐºÐ° Ð½Ð° Ð½Ð¾Ð²Ð¾Ñ�Ñ‚Ð¸" Ð² Ñ„Ð¾Ñ€Ð¼Ñƒ Ñ€ÐµÐ³Ð¸Ñ�Ñ‚Ñ€Ð°Ñ†Ð¸Ð¸
- * Version: 0.2
- * Author: CasePress
- * Author URI: http://casepress.org
+ * Description:
  * License: MIT License
  */
+
 define ( 'MAILCHIMPINT_DIR', untrailingslashit ( dirname ( __FILE__ ) ) );
 define ( 'MAILCHIMPINT_DIR_URL', untrailingslashit ( plugins_url ( '', __FILE__ ) ) );
-
 require_once MAILCHIMPINT_DIR . '/includes/mailchimp-api.php';
 require_once MAILCHIMPINT_DIR . '/includes/section-actions.php';
 require_once MAILCHIMPINT_DIR . '/includes/list-actions.php';
