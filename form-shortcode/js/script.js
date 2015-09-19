@@ -50,7 +50,7 @@ jQuery(document).ready(function() {
 			callback(data);
 		}).fail(function(jqXHR, textStatus) {
 			$domEl.find(".preloader").hide();
-			$domEl.find(".errorMsg").html('Error:' + textStatus '. Please try more late.').show();
+			$domEl.find(".errorMsg").html('Error:' + textStatus + '. Please try more late.').show();
 		});
 	}
 });
