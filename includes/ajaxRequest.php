@@ -20,9 +20,9 @@ function get_RregistrationFormFields() {
 	$dataConst = get_option ( 'mailChimpConstant' );
 	$data = array_merge ( $dataConst, $dataFields );
 	$request = array (
-			data => $data,
-			hasError => 0,
-			message => 'ok' 
+			'data' => $data,
+			'hasError' => 0,
+			'message' => 'ok' 
 	);
 	echo json_encode ( $request );
 	wp_die ();
@@ -38,9 +38,9 @@ function delete_RregistrationFormFields() {
 	$data = get_option ( 'mailChimpFieldList' );
 	
 	$request = array (
-			data => $data,
-			hasError => 0,
-			message => 'ok' 
+			'data' => $data,
+			'hasError' => 0,
+			'message' => 'ok'
 	);
 	echo json_encode ( $request );
 	wp_die ();
@@ -66,9 +66,9 @@ function submit_RregistrationFormBuilde() {
 	
 	$data = array_merge ( $dataConst, $dataFields );
 	$request = array (
-			data => $data,
-			hasError => 0,
-			message => 'ok' 
+			'data' => $data,
+			'hasError' => 0,
+			'message' => 'ok'
 	);
 	echo json_encode ( $request );
 	wp_die ();
