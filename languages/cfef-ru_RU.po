@@ -108,3 +108,9 @@ msgstr "Ваш город"
 msgid "The user is logged in."
 msgstr "Уже зашли"
 
+
+#: mailchimpIntegration-init.php
+#@ cfef
+msgid "Your password"
+msgstr "Ваш пароль"
+

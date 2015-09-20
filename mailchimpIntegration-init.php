@@ -5,6 +5,8 @@
  * License: MIT License
  */
 
+load_plugin_textdomain( 'cfef', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+
 define ( 'MAILCHIMPINT_DIR', untrailingslashit ( dirname ( __FILE__ ) ) );
 define ( 'MAILCHIMPINT_DIR_URL', untrailingslashit ( plugins_url ( '', __FILE__ ) ) );
 require_once MAILCHIMPINT_DIR . '/includes/mailchimp-api.php';
@@ -42,7 +44,7 @@ add_action ( 'namaste_enrolled_course', function ($a, $b, $c) {
 
 // add_action ( 'updated_namaste_unenroll_meta', 'CreateGroupAndForumForCourse::UnsubscribeCourse');
 function mailChimpInt_addToMailChimp($user_id, $key, $user) {
-	wp_new_user_notification ( $user_id, __ ( 'Your password' ) );
+	wp_new_user_notification ( $user_id, __ ( 'Your password', 'cfef' ) );
 	UserProfile_SetDefaultFieldes ( $user ['meta'] ['fieldListWP'], $user ['meta'] ['fieldListBP'], $user_id );
 	UpdateMailChimpParam ( $user_id );
 }
