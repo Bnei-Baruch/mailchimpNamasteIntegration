@@ -1,6 +1,23 @@
 jQuery(document).ready(function() {
 	jQuery("#registrationForm").on('click', '.submit', submitRegister);
 	jQuery("#loginForm").on('click', '.submit', submitLogin);
+	/*Reset password customisation
+	 jQuery("#rememberPass").on('click', rememberPass);
+	
+	function rememberPass(e){
+		e.preventDefault();
+		$container = jQuery("#loginForm");
+		var data = {
+			action : 'rememberRregistrationFormShortcode',
+			userData : $container.serialize()
+		};
+		function callback(data) {
+			if (data && data.result)
+				$domEl.find(".errorMsg").html('Please check you mail').show();
+		}
+		sendRequest(data, callback, $container);
+	}*/
+	
 	function submitRegister(event) {
 		event.preventDefault();
 		$container = jQuery("#registrationForm");

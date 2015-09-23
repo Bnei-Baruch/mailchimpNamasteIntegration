@@ -132,6 +132,7 @@ class RregistrationFormShortcodeClass {
 	
 	// Reads ajax login creds via POSt, calls the login script and interprets the result
 	public static function remember() {
+		global $wpdb, $wp_hasher;
 		$return = array (); // What we send back
 		$result = retrieve_password ();
 		if ($result === true) {

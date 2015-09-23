@@ -50,3 +50,7 @@
     height: auto;
     background-color: #e0922f;
 }
+
+#registrationForm  #rememberPass {
+    display: block;
+}
