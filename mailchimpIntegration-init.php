@@ -44,8 +44,8 @@ add_action ( 'namaste_enrolled_course', function ($a, $b, $c) {
 
 // add_action ( 'updated_namaste_unenroll_meta', 'CreateGroupAndForumForCourse::UnsubscribeCourse');
 function mailChimpInt_addToMailChimp($user_id, $key, $user) {
-	if($user ['meta']['registerFromExel']){
-		register_users_from_exel($user);
+	if($user ['meta']['registerFromExel'] == '1'){
+		register_users_from_exel($user ['meta']['fieldListWP']['user_email']);
 	} else {
 		wp_new_user_notification ( $user_id, __ ( 'Your password', 'cfef' ) );		
 	} 
@@ -54,14 +54,12 @@ function mailChimpInt_addToMailChimp($user_id, $key, $user) {
 	UpdateMailChimpParam ( $user_id );
 }
 
-function register_users_from_exel($user){
-	
-	
+function register_users_from_exel($user_email){
 	$subject = 'The subject.';
 	$msg = 'Content of mail';
 	$headers = array();
 	$headers[] = 'Content-type: text/html';
-	wp_mail( $user->user_email, stripslashes( $subject ), $msg, $headers );
+	wp_mail( $user_email, stripslashes( $subject ), $msg, $headers );
 }
 
 

@@ -25,7 +25,7 @@ class RregistrationFormShortcodeClass {
 				self::_enrollToCourse ( $userData ['courseId'], $loginResult->ID );
 			} elseif (strtolower ( get_class ( $loginResult ) ) == 'wp_error') {
 				// User login failed
-				// @var WP_Error $loginResult 
+				// @var WP_Error $loginResult
 				$return ['result'] = false;
 				$return ['error'] = $loginResult->get_error_message ();
 			} else {
@@ -48,14 +48,20 @@ class RregistrationFormShortcodeClass {
 	 *
 	 * @return string
 	 */
-	public static function register() {
+	public static function register($userData = NULL) {
 		global $wpdb;
 		$fieldList = UserProfile_GetDefaultFieldes ();
 		$fieldListWP = array ();
 		$fieldListBP = array ();
 		$return = array ();
+		$isFromExel = false;
 		
-		parse_str ( $_POST ['userData'], $fieldsData );
+		if (is_null ( $userData ) || empty ( $userData ))
+			$userData = parse_str ( $_POST ['userData'], $fieldsData );
+		else {
+			$isFromExel = true;
+			$fieldsData = $userData;
+		}
 		
 		// break if two password fieldes are not equal
 		if ($fieldsData ['password_confirmation'] != $fieldsData ['user_pass']) {
@@ -64,7 +70,9 @@ class RregistrationFormShortcodeClass {
 			$return ['msg'] = $fieldsData ['user_pass'];
 			$return ['$pass_conf'] = $fieldsData ['password_confirmation'];
 			echo json_encode ( $return );
-			wp_die ();
+			if (! $isFromExel) {
+				wp_die ();
+			}
 		}
 		
 		foreach ( $fieldList as $key => $val ) {
@@ -76,7 +84,7 @@ class RregistrationFormShortcodeClass {
 		
 		$fieldListWP ['user_login'] = $fieldListWP ['user_email'];
 		$fieldListWP ['nick_name'] = empty ( $fieldListWP ['first_name'] ) ? $fieldListWP ['user_login'] : $fieldListWP ['first_name'];
-		
+
 		if (get_option ( 'users_can_register' )) {
 			
 			if (! function_exists ( 'register_new_user' )) {
@@ -91,12 +99,17 @@ class RregistrationFormShortcodeClass {
 				$return ['result'] = false;
 				$return ['error'] = __ ( 'This email was registred.', 'login' );
 				echo json_encode ( $return );
-				wp_die ();
+				if (! $isFromExel) {
+					wp_die ();
+				}
 			}
 			$fieldList = array (
 					fieldListWP => $fieldListWP,
 					fieldListBP => $fieldListBP 
 			);
+			if ($isFromExel)
+				$fieldList ['registerFromExel'] = true;
+			
 			$registerResult = bp_core_signup_user ( $fieldListWP ['user_login'], $fieldListWP ['user_pass'], $fieldListWP ['user_email'], $fieldList );
 			if (! is_wp_error ( $registerResult )) {
 				// Success
@@ -114,12 +127,13 @@ class RregistrationFormShortcodeClass {
 			$return ['result'] = false;
 			$return ['error'] = __ ( 'Registration has been disabled.', 'login' );
 		}
-		
 		echo json_encode ( $return );
-		wp_die ();
+		if (! $isFromExel) {
+			wp_die ();
+		}
 	}
 	private static function _enrollToCourse($courseId, $userId) {
-		if (is_null ( $courseId )){
+		if (is_null ( $courseId )) {
 			return;
 		}
 		$_course = new NamasteLMSCourseModel ();
@@ -153,31 +167,38 @@ class RregistrationFormShortcodeClass {
 		// Return the result array with errors etc.
 		return $return;
 	}
-	private static function wpmu_signup_user($user, $user_pass, $user_email, $meta = array()) {
-		global $wpdb;
-		
-		// Format data
-		$user = preg_replace ( '/\s+/', '', sanitize_user ( $user, true ) );
-		$user_email = sanitize_email ( $user_email );
-		$key = substr ( md5 ( time () . rand () . $user_email ), 0, 16 );
-		// $meta['password'] = $user_pass;
-		$meta = serialize ( $meta );
-		$table = ($wpdb->signups != null) ? $wpdb->signups : 'wp_signups';
-		
-		$temp = $wpdb->insert ( $table, array (
-				'domain' => '',
-				'path' => '',
-				'title' => '',
-				'new_role' => "subscriber",
-				'add_to_blog' => get_current_blog_id (),
-				'user_login' => $user,
-				'user_email' => $user_email,
-				'registered' => current_time ( 'mysql', true ),
-				'activation_key' => $key,
-				'meta' => $meta 
-		), '%s' );
-		
-		wpmu_signup_user_notification ( $user, $user_email, $key, $meta );
+	public static function fromExelRregistration() {
+		$row = 0;
+		$arrOfIndex = array (
+				'first_name' => - 1,
+				'last_name' => - 1,
+				'user_email' => - 1,
+				'country' => - 1,
+				'city' => - 1 
+		);
+		if (($handle = fopen ( MAILCHIMPINT_DIR . "/users.csv", "r" )) !== FALSE) {
+			while ( ($data = fgetcsv ( $handle, 1000, "," )) !== FALSE ) {
+				if ($row == 0) {
+					$maxI = count ( $data );
+					for($cI = 0; $cI < $maxI; $cI ++) {
+						$arrOfIndex [$data [$cI]] = $cI;
+					}
+				} else {
+					$arrOfData = array (
+							'user_pass' => '12345',
+							'password_confirmation' => '12345',
+							'last_name' => '',
+							'display_name' => ''
+					);
+					foreach ( $arrOfIndex as $key => $c ) {
+						$arrOfData [$key] = $data [$c];
+					}
+					self::register ( $arrOfData );
+				}
+				$row ++;
+			}
+			fclose ( $handle );
+		}
 	}
 }
 

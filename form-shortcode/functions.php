@@ -8,24 +8,24 @@ function UserProfile_GetDefaultFieldes($user_id = 0) {
 					type => 'wp' 
 			),*/
 			first_name => array (
-					val => '',
-					type => 'wp' 
+					'val' => '',
+					'type' => 'wp' 
 			),
 			last_name => array (
-					val => '',
-					type => 'wp' 
+					'val' => '',
+					'type' => 'wp'
 			),
 			display_name => array (
-					val => '',
-					type => 'wp' 
+					'val' => '',
+					'type' => 'wp'
 			),
 			user_email => array (
-					val => '',
-					type => 'wp' 
+					'val' => '',
+					'type' => 'wp'
 			),
 			user_pass => array (
-					val => '',
-					type => 'wp' 
+					'val' => '',
+					'type' => 'wp'
 			) 
 	);
 	

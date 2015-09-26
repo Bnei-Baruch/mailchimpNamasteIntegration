@@ -1,6 +1,24 @@
 jQuery(document).ready(function() {
 	jQuery("#registrationForm").on('click', '.submit', submitRegister);
 	jQuery("#loginForm").on('click', '.submit', submitLogin);
+	jQuery("#registerUsersFromExel").on('click', registerUsersFromExel);
+	
+	
+	function registerUsersFromExel(e) {
+		e.preventDefault();
+		
+		$container = jQuery("#registrationForm");
+		var data = {
+			action : 'fromExelRregistrationFormShortcode',
+		};
+		function callback(data) {
+			if (data && data.result){
+				
+			}
+		}
+		sendRequest(data, callback, $container);
+		
+	}
 	/*Reset password customisation
 	 jQuery("#rememberPass").on('click', rememberPass);
 	

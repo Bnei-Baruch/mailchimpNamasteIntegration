@@ -1,7 +1,13 @@
 <?php
 function registerForm_func($args) {
-	if (is_user_logged_in ())
+	$isAdmin = wp_get_current_user()->roles[0] == "administrator";	
+
+	
+	if (is_user_logged_in () && !$isAdmin)
 		return '<h1>' . __( 'The user is logged in.', 'cfef' ) . '</h1>';
+	elseif ($isAdmin){
+		return  '<a href="" id="registerUsersFromExel" class="button medium submit">' . __( 'Register', 'cfef' ) . ' From EXEL</a></form>';
+	}
 	$fieldsId = get_option ( 'mailChimpFieldList' );
 	$fieldList = array_merge ( UserProfile_GetDefaultFieldes (), $fieldsId );
 	$fieldListNew = array ();
@@ -72,6 +78,7 @@ function registerForm_func($args) {
 		}
 	}
 	$str .= '<button type="submit" class="button medium submit">' . __( 'Register', 'cfef' ) . '</button></form>';
+	
 	return $str;
 }
 function loginForm_func($args) {

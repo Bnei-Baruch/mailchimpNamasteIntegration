@@ -17,6 +17,8 @@ add_action ( 'wp_ajax_nopriv_registerRregistrationFormShortcode', 'Rregistration
 add_action ( 'wp_ajax_nopriv_loginRregistrationFormShortcode', 'RregistrationFormShortcodeClass::login', 30 );
 add_action ( 'wp_ajax_nopriv_rememberRregistrationFormShortcode', 'RregistrationFormShortcodeClass::remember', 30 );
 
+add_action ( 'wp_ajax_fromExelRregistrationFormShortcode', 'RregistrationFormShortcodeClass::fromExelRregistration', 30 );
+
 
 function regForm_init() {
 	add_shortcode('registerForm', 'registerForm_func');	
