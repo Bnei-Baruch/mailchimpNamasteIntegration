@@ -114,3 +114,25 @@ msgstr "Уже зашли"
 msgid "Your password"
 msgstr "Ваш пароль"
 
+#: form-shortcode.php
+#@ cfef
+msgid "Custom activation subject"
+msgstr Активируйте полный доступ к онлайн-курсу "Основы науки каббала"
+
+#: form-shortcode.php:5
+#@ cfef
+msgid "Custom activation body"
+msgstr Вы прошли предварительную регистрацию на курс "Основы науки каббала", поток "Осень 2015".<br /><br /> 
+Чтобы получить полный доступ к обучению, активируйте ваш аккаунт на сайте Международной академии каббалы, нажав по ссылке: <a href="%1$s">%1$s</a> 
+
+#: form-shortcode.php
+#@ cfef
+msgid "Custom retrieve title"
+msgstr "Смена пароля для сайта kabacademy.com"
+
+#: form-shortcode.php:5
+#@ cfef
+msgid "Custom retrieve body"
+msgstr Кто-то запросил смену пароля на сайте <a href="http://%1$s">%1$s</a> для %2$s.<br /><br />
+Если произошла ошибка, просто проигнорируйте это письмо, и ничего не произойдёт.<br /><br />
+Чтобы сбросить пароль, перейдите по следующей ссылке: <a href="%3$s">%3$s</a>.

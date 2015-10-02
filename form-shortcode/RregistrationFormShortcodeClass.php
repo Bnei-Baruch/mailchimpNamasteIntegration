@@ -50,7 +50,7 @@ class RregistrationFormShortcodeClass {
 	 */
 	public static function register($userData = NULL) {
 		global $wpdb;
-		$fieldList = UserProfile_GetDefaultFieldes ();
+		$fieldList = UserProfile_GetDefaultFieldes (-1);
 		$fieldListWP = array ();
 		$fieldListBP = array ();
 		$return = array ();
@@ -84,7 +84,7 @@ class RregistrationFormShortcodeClass {
 		
 		$fieldListWP ['user_login'] = $fieldListWP ['user_email'];
 		$fieldListWP ['nick_name'] = empty ( $fieldListWP ['first_name'] ) ? $fieldListWP ['user_login'] : $fieldListWP ['first_name'];
-
+		
 		if (get_option ( 'users_can_register' )) {
 			
 			if (! function_exists ( 'register_new_user' )) {
@@ -98,9 +98,12 @@ class RregistrationFormShortcodeClass {
 			if ($userByEmail) {
 				$return ['result'] = false;
 				$return ['error'] = __ ( 'This email was registred.', 'login' );
-				echo json_encode ( $return );
 				if (! $isFromExel) {
+					echo json_encode ( $return );
 					wp_die ();
+				} else {
+					echo '+';
+					return;
 				}
 			}
 			$fieldList = array (
@@ -184,11 +187,13 @@ class RregistrationFormShortcodeClass {
 						$arrOfIndex [$data [$cI]] = $cI;
 					}
 				} else {
+					$user_pass = wp_generate_password();
 					$arrOfData = array (
-							'user_pass' => '12345',
-							'password_confirmation' => '12345',
-							'last_name' => '',
-							'display_name' => ''
+							'user_pass' => $user_pass,
+							'password_confirmation' => $user_pass,
+							'last_name' => ' ',
+							'display_name' => ' ',
+							'city' => ' ' 
 					);
 					foreach ( $arrOfIndex as $key => $c ) {
 						$arrOfData [$key] = $data [$c];
