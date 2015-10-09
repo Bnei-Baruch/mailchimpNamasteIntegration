@@ -15,6 +15,7 @@ require_once MAILCHIMPINT_DIR . '/includes/ajaxRequest.php';
 require_once MAILCHIMPINT_DIR . '/includes/CreateGroupAndForumForCourse.php';
 require_once MAILCHIMPINT_DIR . '/form-shortcode/registre-form-init.php';
 
+
 if (is_admin ()) {
 	require_once MAILCHIMPINT_DIR . '/admin/admin.php';
 	add_action ( 'admin_menu', 'mailChimpInt_init' );
@@ -60,7 +61,7 @@ function mailChimpInt_addToMailChimp($user_id, $key, $user) {
 }
 function register_users_from_site($user_id) {
 	$user = get_user_by ( 'id', $user_id );
-	$subject = 'Вы успешно зарегистрированы на сайте Международной академии каббалы.'; 
+	$subject = 'Логин и пароль для сайта kabacademy.com.'; 
 	$message  = "Вы успешно зарегистрированы на сайте Международной академии каббалы.<br /><br />";
 	$message .= sprintf(__('Username: %s'), $user->user_login) . "<br /><br />";
 	$message .= __('Password: ') . "[Ваш пароль, который Вы указывали при регистрации]<br /><br />";
