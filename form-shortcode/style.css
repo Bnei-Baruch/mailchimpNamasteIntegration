@@ -54,3 +54,14 @@
 #loginForm  #rememberPass {
     display: block;
 }
+
+/*Dialog - redefine because theme styles */
+.ui-widget-overlay,  .ui-dialog{
+	z-index: 1001;
+}
+#updateProfileForm form .formItem{
+	margin-top: 10px;
+} 
+#updateProfileForm form input.text{
+	width: 100%; display: block;
+} 

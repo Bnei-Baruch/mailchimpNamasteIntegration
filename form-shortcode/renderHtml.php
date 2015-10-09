@@ -43,11 +43,11 @@ function registerForm_func($args) {
 				$formType = 'password';
 				break;
 			case 'country' :
-				$translateText = 'Country';
+				$translateText = 'country';
 				$fieldType = "bp";
 				break;
 			case 'city' :
-				$translateText = 'City';
+				$translateText = 'city';
 				$fieldType = "bp";
 				break;
 			default :
@@ -82,8 +82,9 @@ function registerForm_func($args) {
 	return $str;
 }
 function loginForm_func($args) {
-	if (is_user_logged_in ())
+	if (is_user_logged_in ()){
 		return '<h1>' . __( 'The user is logged in.', 'cfef' ) . '</h1>';
+	}
 	$str = '<form class="lr-form" id="loginForm" actoin="#" metod="post">';
 	$str .= '<div class="preloader"></div>';
 	$str .= '<div class="errorMsg" style="color: red;display: none;"></div>';

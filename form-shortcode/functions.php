@@ -7,33 +7,40 @@ function UserProfile_GetDefaultFieldes($user_id = 0) {
 					val => '',
 					type => 'wp' 
 			),*/
-			first_name => array (
+			'first_name' => array (
 					'val' => '',
-					'type' => 'wp' 
+					'type' => 'wp',
+					'translate' => __('Your First Name',  'cfef')
+					
 			),
-			last_name => array (
+			'last_name' => array (
 					'val' => '',
-					'type' => 'wp' 
+					'type' => 'wp',
+					'translate' => __('Last Name',  'cfef') 
 			),
-			display_name => array (
+			'display_name' => array (
 					'val' => '',
-					'type' => 'wp' 
+					'type' => 'wp' ,
+					'translate' => __('Display Name',  'cfef')
 			),
-			user_email => array (
+			'user_email' => array (
 					'val' => '',
-					'type' => 'wp' 
+					'type' => 'wp' ,
+					'translate' => __('Email',  'cfef')
 			),
-			user_pass => array (
+			'user_pass' => array (
 					'val' => '',
-					'type' => 'wp' 
+					'type' => 'wp' ,
+					'translate' => __('Password',  'cfef')
 			) 
 	);
 	
 	foreach ( get_option ( 'mailChimpFieldList' ) as $key => $val ) {
 		$fieldVal = $user_id == - 1 ? "" : xprofile_get_field_data ( $val, $user_id );
 		$fieldList [$val] = array (
-				val => $fieldVal,
-				type => 'bp' 
+				'val' => $fieldVal,
+				'type' => 'bp',
+				'translate' => __($val,  'cfef')
 		);
 	}
 	
@@ -50,12 +57,14 @@ function UserProfile_GetDefaultFieldes($user_id = 0) {
 function UserProfile_SetDefaultFieldes($fieldListWP, $fieldListBP, $user_id = 1) {
 	if ($fieldListWP != null) {
 		// If need more complexy display_name can use - bp_core_get_user_displayname
-		$fieldListWP ['display_name'] = $fieldListWP ['last_name'] . ' ' . $fieldListWP ['first_name'];
-		foreach ( $fieldListWP as $key=>$val ) {
-			if($key == "user_pass")
+		if(empty($fieldListWP ['display_name'])) 
+				$fieldListWP ['display_name'] = $fieldListWP ['last_name'] . ' ' . $fieldListWP ['first_name'];
+		
+		foreach ( $fieldListWP as $key => $val ) {
+			if ($key == "user_pass")
 				continue;
 			
-			update_user_meta( $user_id, $key, $val );
+			update_user_meta ( $user_id, $key, $val );
 		}
 	}
 	
@@ -108,9 +117,8 @@ function mailchimpBpIntagration_retrieve_message($message, $key) {
 	$user = get_user_by_email ( $email );
 	$login_url = wp_login_url ( home_url () );
 	$login_url .= '&action=rp&key=' . $key . '&login=' . $user->data->user_email;
-	$massage = sprintf ( __ ( 'Custom retrieve body', 'cfef' ), 'kabacademy.com', $user->data->user_login, $login_url);
+	$massage = sprintf ( __ ( 'Custom retrieve body', 'cfef' ), 'kabacademy.com', $user->data->user_login, $login_url );
 	include ("email_footer.php");
 	return $massage;
 }
-
 ?>

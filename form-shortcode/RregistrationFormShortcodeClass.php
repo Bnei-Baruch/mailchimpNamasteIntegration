@@ -50,7 +50,7 @@ class RregistrationFormShortcodeClass {
 	 */
 	public static function register($userData = NULL) {
 		global $wpdb;
-		$fieldList = UserProfile_GetDefaultFieldes (-1);
+		$fieldList = UserProfile_GetDefaultFieldes ( - 1 );
 		$fieldListWP = array ();
 		$fieldListBP = array ();
 		$return = array ();
@@ -187,7 +187,7 @@ class RregistrationFormShortcodeClass {
 						$arrOfIndex [$data [$cI]] = $cI;
 					}
 				} else {
-					$user_pass = wp_generate_password();
+					$user_pass = wp_generate_password ();
 					$arrOfData = array (
 							'user_pass' => $user_pass,
 							'password_confirmation' => $user_pass,
@@ -204,6 +204,57 @@ class RregistrationFormShortcodeClass {
 			}
 			fclose ( $handle );
 		}
+	}
+	public static function getUpdateProfile() {
+		$isShowDialog = false;
+		$data = UserProfile_GetDefaultFieldes ();
+		$userData = get_user_by_email ( $data ['user_email'] ['val'] )->data;
+
+		if (empty ( $data ['first_name'] ['val'] ))
+			$isShowDialog = true;
+		if (empty ( $data ['last_name'] ['val'] ))
+			$isShowDialog = true;
+		if (empty ( $data ['display_name'] ['val'] ) || $data ['display_name'] ['val'] == $userData->user_nicename)
+			$isShowDialog = true;
+		if (empty ( $data ['city'] ['val'] ))
+			$isShowDialog = true;
+		if (empty ( $data ['country'] ['val'] ))
+			$isShowDialog = true;
+		
+		$data ['result'] = $isShowDialog;
+		$data ['translate'] = array (
+				'title' => __ ( 'Update profile title', 'cfef' ),
+				'save' => __ ( 'Save' ),
+				'cancel' => __ ( 'Cancel' ) 
+		);
+		
+		wp_die ( json_encode ( $data ) );
+	}
+	public static function setUpdateProfile() {
+		$fieldList = UserProfile_GetDefaultFieldes ( - 1 );
+		$fieldListWP = array ();
+		$fieldListBP = array ();
+		$return = array ();
+		
+		$user_id = get_current_user_id ();
+		$userData = parse_str ( $_POST ['userData'], $fieldsData );
+		foreach ( $fieldList as $key => $val ) {
+			if ($fieldList [$key] ['type'] == "wp")
+				$fieldListWP [$key] = $fieldsData [$key] ? $fieldsData [$key] : $fieldList [$key] ['val'];
+			else
+				$fieldListBP [$key] = $fieldsData [$key] ? $fieldsData [$key] : $fieldList [$key] ['val'];
+		}
+		
+		UserProfile_SetDefaultFieldes ( $fieldListWP, $fieldListBP, $user_id );
+		$args = array (
+				'ID' => $user_id,
+				'display_name' => $fieldListWP ['display_name'] 
+		);
+		wp_update_user ( $args );
+		
+		$data ['result'] = true;
+		
+		wp_die ( json_encode ( $data ) );
 	}
 }
 
