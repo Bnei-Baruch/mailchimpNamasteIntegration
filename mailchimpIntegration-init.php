@@ -15,7 +15,6 @@ require_once MAILCHIMPINT_DIR . '/includes/ajaxRequest.php';
 require_once MAILCHIMPINT_DIR . '/includes/CreateGroupAndForumForCourse.php';
 require_once MAILCHIMPINT_DIR . '/form-shortcode/registre-form-init.php';
 
-
 if (is_admin ()) {
 	require_once MAILCHIMPINT_DIR . '/admin/admin.php';
 	add_action ( 'admin_menu', 'mailChimpInt_init' );
@@ -42,40 +41,41 @@ add_action ( 'namaste_enrolled_course', function ($a, $b, $c) {
 	CreateGroupAndForumForCourse::EnrolledCourse ( $a, $b, $c );
 }, 10, 3 );
 
-//add_filter ( 'bp_core_signup_send_validation_email_message', 'mailchimpBpIntagration_activation_message', 10, 3 );
-//add_filter ( 'bp_core_signup_send_validation_email_subject', 'mailchimpBpIntagration_activation_subject', 10, 5 );
+// add_filter ( 'bp_core_signup_send_validation_email_message', 'mailchimpBpIntagration_activation_message', 10, 3 );
+// add_filter ( 'bp_core_signup_send_validation_email_subject', 'mailchimpBpIntagration_activation_subject', 10, 5 );
 
-add_filter ( 'retrieve_password_message', 'mailchimpBpIntagration_retrieve_message', 10, 2);
-add_filter ( 'retrieve_password_title', 'mailchimpBpIntagration_retrieve_title', 10, 1);
+add_filter ( 'retrieve_password_message', 'mailchimpBpIntagration_retrieve_message', 10, 2 );
+add_filter ( 'retrieve_password_title', 'mailchimpBpIntagration_retrieve_title', 10, 1 );
 
 // add_action ( 'updated_namaste_unenroll_meta', 'CreateGroupAndForumForCourse::UnsubscribeCourse');
 function mailChimpInt_addToMailChimp($user_id, $key, $user) {
-	
-	if ($user ['meta'] ['registerFromExel'] == '1') {
+	if (is_numeric ( $user ['meta'] ['enrollToCourse'] )) {
 		register_users_from_exel ( $user_id, $user ['meta'] ['fieldListWP'] ['user_pass'] );
 	} else {
-		register_users_from_site($user_id);
+		register_users_from_site ( $user_id, $user ['meta'] ['fieldListWP'] ['user_pass'] );
 	}
 	UserProfile_SetDefaultFieldes ( $user ['meta'] ['fieldListWP'], $user ['meta'] ['fieldListBP'], $user_id );
 	UpdateMailChimpParam ( $user_id );
 }
-function register_users_from_site($user_id) {
+function register_users_from_site($user_id, $user_pass) {
 	$user = get_user_by ( 'id', $user_id );
-	$subject = 'Логин и пароль для сайта kabacademy.com.'; 
-	$message  = "Вы успешно зарегистрированы на сайте Международной академии каббалы.<br /><br />";
-	$message .= sprintf(__('Username: %s'), $user->user_login) . "<br /><br />";
-	$message .= __('Password: ') . "[Ваш пароль, который Вы указывали при регистрации]<br /><br />";
-
-	$message .= get_site_url() . "/login/<br />";
+	$subject = 'Логин и пароль для сайта kabacademy.com.';
+	$message = "Вы успешно зарегистрированы на сайте Международной академии каббалы.<br /><br />";
+	$message .= sprintf ( __ ( 'Username: %s' ), $user->user_login ) . "<br /><br />";
+	$message .= __ ( 'Password: ' ) . $user_pass . '<br /><br />';
+	$message .= 'Чтобы установить новый пароль, перейдите по ссылке: ' . wp_login_url ( home_url () ) . '&action=lostpassword';
+	// after registration reditect to
+	$message .= '&amp;redirect_to' . get_site_url () . "/login/<br />";
+	
 	$headers = array (
-			'Content-type: text/html'
+			'Content-type: text/html' 
 	);
 	
 	wp_mail ( $user->user_email, stripslashes ( $subject ), $message, $headers );
 }
 function register_users_from_exel($user_id, $user_pass) {
 	$user = get_user_by ( 'id', $user_id );
-
+	
 	$subject = 'Логин и пароль для сайта kabacademy.com';
 	
 	$msg = 'Ваши данные для входа на сайте kabacademy.com:<br />';
@@ -83,7 +83,7 @@ function register_users_from_exel($user_id, $user_pass) {
 	$msg .= 'Новый пароль: ' . $user_pass . '<br /><br />';
 	$msg .= 'Чтобы записаться на онлайн-обучение, переходите на страницу курса "Осень 2015" по ссылке <a href="http://kabacademy.com/course/osnovyi-kabbalyi-br-osen-2015">kabacademy.com/course/osnovyi-kabbalyi-br-osen-2015</a> и нажмите на оранжевую кнопку "Записаться". При авторизации на сайте вам потребуется ввести логин и пароль.<br /><br />';
 	$msg .= 'Спасибо за проявленное желание обучаться на курсе "Основы науки каббала".<br /><br />';
-	$msg .= 'Чтобы установить новый пароль, перейдите по ссылке: '. wp_login_url ( home_url () ) . '&action=lostpassword';		
+	$msg .= 'Чтобы установить новый пароль, перейдите по ссылке: ' . wp_login_url ( home_url () ) . '&action=lostpassword';
 	
 	$headers = array (
 			'Content-type: text/html' 

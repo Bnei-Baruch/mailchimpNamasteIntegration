@@ -20,9 +20,9 @@ class RregistrationFormShortcodeClass {
 			$user_role = 'null';
 			if (strtolower ( get_class ( $loginResult ) ) == 'wp_user') {
 				$return ['result'] = true;
-				$return ['message'] = __ ( "Login Successful, redirecting...", 'login' );
+				$return ['message'] = __ ( 'You have logged in successfully.' );
 				// Able enroll user on login
-				self::_enrollToCourse ( $userData ['courseId'], $loginResult->ID );
+				//self::_enrollToCourse ( $userData ['courseId'], $loginResult->ID );
 			} elseif (strtolower ( get_class ( $loginResult ) ) == 'wp_error') {
 				// User login failed
 				// @var WP_Error $loginResult
@@ -31,11 +31,11 @@ class RregistrationFormShortcodeClass {
 			} else {
 				// Undefined Error
 				$return ['result'] = false;
-				$return ['error'] = __ ( 'An undefined error has ocurred', 'login' );
+				$return ['error'] = __ ( 'An error occurred. Please try again later.' );
 			}
 		} else {
 			$return ['result'] = false;
-			$return ['error'] = __ ( 'Please supply your username and password.', 'login' );
+			$return ['error'] = __ ( '<strong>ERROR</strong>: Invalid username or incorrect password.' );
 		}
 		$return ['action'] = 'login';
 		
@@ -64,17 +64,20 @@ class RregistrationFormShortcodeClass {
 		}
 		
 		// break if two password fieldes are not equal
-		if ($fieldsData ['password_confirmation'] != $fieldsData ['user_pass']) {
-			$return ['result'] = false;
-			$return ['error'] = __ ( 'Password not confirmed.', 'login' );
-			$return ['msg'] = $fieldsData ['user_pass'];
-			$return ['$pass_conf'] = $fieldsData ['password_confirmation'];
-			echo json_encode ( $return );
-			if (! $isFromExel) {
-				wp_die ();
-			}
-		}
+		/*
+		 * if ($fieldsData ['password_confirmation'] != $fieldsData ['user_pass']) {
+		 * $return ['result'] = false;
+		 * $return ['error'] = __ ( 'Password not confirmed.', 'login' );
+		 * $return ['msg'] = $fieldsData ['user_pass'];
+		 * $return ['$pass_conf'] = $fieldsData ['password_confirmation'];
+		 * echo json_encode ( $return );
+		 * if (! $isFromExel) {
+		 * wp_die ();
+		 * }
+		 * }
+		 */
 		
+		$fieldListWP ['user_pass'] = wp_generate_password ();
 		foreach ( $fieldList as $key => $val ) {
 			if ($fieldList [$key] ['type'] == "wp")
 				$fieldListWP [$key] = $fieldsData [$key] ? $fieldsData [$key] : $fieldList [$key] ['val'];
@@ -93,11 +96,18 @@ class RregistrationFormShortcodeClass {
 			}
 			// if it's not error - this is user id
 			$fieldListWP ['user_email'] = sanitize_email ( $fieldListWP ['user_email'] );
+			if (empty ( $fieldListWP ['user_email'] )) {
+				$return ['result'] = false;
+				$return ['error'] = __ ( '<strong>ERROR</strong>: The email address isn&#8217;t correct.' );
+				echo json_encode ( $return );
+				wp_die ();
+			}
+			
 			$userByEmail = get_user_by_email ( $fieldListWP ['user_email'] );
 			
 			if ($userByEmail) {
 				$return ['result'] = false;
-				$return ['error'] = __ ( 'This email was registred.', 'login' );
+				$return ['error'] = __ ( 'Sorry, that email address is already used!' );
 				if (! $isFromExel) {
 					echo json_encode ( $return );
 					wp_die ();
@@ -110,39 +120,50 @@ class RregistrationFormShortcodeClass {
 					fieldListWP => $fieldListWP,
 					fieldListBP => $fieldListBP 
 			);
-			if ($isFromExel)
-				$fieldList ['registerFromExel'] = true;
+			
+			if (is_numeric ( $fieldsData ['enrollToCourse'] ))
+				$fieldList ['enrollToCourse'] = $fieldsData ['enrollToCourse'];
 			
 			$registerResult = bp_core_signup_user ( $fieldListWP ['user_login'], $fieldListWP ['user_pass'], $fieldListWP ['user_email'], $fieldList );
 			if (! is_wp_error ( $registerResult )) {
 				// Success
 				$return ['result'] = true;
 				$return ['userId'] = $registerResult;
-				$return ['message'] = __ ( 'Registration complete. Please check your e-mail.', 'login' );
-				self::_enrollToCourse ( $userData ['courseId'], $registerResult->ID );
+				
+				if (is_numeric ( $fieldsData ['enrollToCourse'] ))
+					self::_enrollToCourse ( $fieldsData ['enrollToCourse'], $registerResult );
+				
+				$return ['message'] = array (
+						'title' => __ ( 'Registration, check you mail. Title', 'qode' ),
+						'content' => __ ( 'Registration, check you mail. Content', 'qode' ) 
+				);
+				$return ['buttons'] = array (
+						'toHome' => array (
+								'text' => __ ( 'Go to home page' ),
+								'url' => get_site_url () 
+						)
+				);
 			} else {
 				// Something's wrong
 				$return ['result'] = false;
-				$return ['error'] = ($registerResult == false) ? __ ( 'An undefined error has ocurred', 'login' ) : $registerResult->get_error_message ();
+				$return ['error'] = ($registerResult == false) ? __ ( 'An error occurred. Please try again later.' ) : $registerResult->get_error_message ();
 			}
 			$return ['action'] = 'register';
 		} else {
 			$return ['result'] = false;
-			$return ['error'] = __ ( 'Registration has been disabled.', 'login' );
+			$return ['error'] = __ ( 'User registration has been disabled.' );
 		}
 		echo json_encode ( $return );
 		if (! $isFromExel) {
 			wp_die ();
 		}
 	}
-	private static function _enrollToCourse($courseId, $userId) {
-		if (is_null ( $courseId )) {
-			return;
-		}
+	private static function _enrollToCourse($courseId, $userId) {		
 		$_course = new NamasteLMSCourseModel ();
 		// enroll in course
 		$course = $_course->select ( $courseId );
 		$enroll_mode = get_post_meta ( $course->ID, 'namaste_enroll_mode', true );
+	
 		// if already enrolled, just skip this altogether
 		$_course->enroll ( $userId, $course->ID, 'enrolled' );
 	}
@@ -187,10 +208,7 @@ class RregistrationFormShortcodeClass {
 						$arrOfIndex [$data [$cI]] = $cI;
 					}
 				} else {
-					$user_pass = wp_generate_password ();
 					$arrOfData = array (
-							'user_pass' => $user_pass,
-							'password_confirmation' => $user_pass,
 							'last_name' => ' ',
 							'display_name' => ' ',
 							'city' => ' ' 
@@ -198,6 +216,8 @@ class RregistrationFormShortcodeClass {
 					foreach ( $arrOfIndex as $key => $c ) {
 						$arrOfData [$key] = $data [$c];
 					}
+					// id of course for enroll
+					$arrOfData ['enrollToCourse'] = 1957;
 					self::register ( $arrOfData );
 				}
 				$row ++;
@@ -209,16 +229,16 @@ class RregistrationFormShortcodeClass {
 		$isShowDialog = false;
 		$data = UserProfile_GetDefaultFieldes ();
 		$userData = get_user_by_email ( $data ['user_email'] ['val'] )->data;
-
+		
 		if (empty ( $data ['first_name'] ['val'] ))
 			$isShowDialog = true;
 		if (empty ( $data ['last_name'] ['val'] ))
 			$isShowDialog = true;
 		if (empty ( $data ['display_name'] ['val'] ) || $data ['display_name'] ['val'] == $userData->user_nicename)
 			$isShowDialog = true;
-		if (empty ( $data ['city'] ['val'] ))
+		if (empty ( $data ['city'] ['val'] ) || $data ['city'] ['val'] == __ ( 'city', 'cfef' ))
 			$isShowDialog = true;
-		if (empty ( $data ['country'] ['val'] ))
+		if (empty ( $data ['country'] ['val'] ) || $data ['city'] ['val'] == __ ( 'country', 'cfef' ))
 			$isShowDialog = true;
 		
 		$data ['result'] = $isShowDialog;
