@@ -22,7 +22,7 @@ class RregistrationFormShortcodeClass {
 				$return ['result'] = true;
 				$return ['message'] = __ ( 'You have logged in successfully.' );
 				// Able enroll user on login
-				//self::_enrollToCourse ( $userData ['courseId'], $loginResult->ID );
+				// self::_enrollToCourse ( $userData ['courseId'], $loginResult->ID );
 			} elseif (strtolower ( get_class ( $loginResult ) ) == 'wp_error') {
 				// User login failed
 				// @var WP_Error $loginResult
@@ -141,7 +141,7 @@ class RregistrationFormShortcodeClass {
 						'toHome' => array (
 								'text' => __ ( 'Go to home page' ),
 								'url' => get_site_url () 
-						)
+						) 
 				);
 			} else {
 				// Something's wrong
@@ -158,12 +158,12 @@ class RregistrationFormShortcodeClass {
 			wp_die ();
 		}
 	}
-	private static function _enrollToCourse($courseId, $userId) {		
+	private static function _enrollToCourse($courseId, $userId) {
 		$_course = new NamasteLMSCourseModel ();
 		// enroll in course
 		$course = $_course->select ( $courseId );
 		$enroll_mode = get_post_meta ( $course->ID, 'namaste_enroll_mode', true );
-	
+		
 		// if already enrolled, just skip this altogether
 		$_course->enroll ( $userId, $course->ID, 'enrolled' );
 	}
@@ -229,17 +229,19 @@ class RregistrationFormShortcodeClass {
 		$isShowDialog = false;
 		$data = UserProfile_GetDefaultFieldes ();
 		$userData = get_user_by_email ( $data ['user_email'] ['val'] )->data;
-		
-		if (empty ( $data ['first_name'] ['val'] ))
-			$isShowDialog = true;
-		if (empty ( $data ['last_name'] ['val'] ))
-			$isShowDialog = true;
-		if (empty ( $data ['display_name'] ['val'] ) || $data ['display_name'] ['val'] == $userData->user_nicename)
-			$isShowDialog = true;
-		if (empty ( $data ['city'] ['val'] ) || $data ['city'] ['val'] == __ ( 'city', 'cfef' ))
-			$isShowDialog = true;
-		if (empty ( $data ['country'] ['val'] ) || $data ['city'] ['val'] == __ ( 'country', 'cfef' ))
-			$isShowDialog = true;
+		foreach ( $data as $key => $val ) {
+			if($key == 'user_email')
+				continue;
+			if (empty ( $val ['val'] ) || strpos ( $val ['val'], $val ['translate'] ) !== false) {
+				$isShowDialog = array (
+						'val' => $key,
+						'val1' => $val ['val'],
+						'val2' => $val ['translate'],
+						'strpos' => strpos ( $val ['val'], $val ['translate'] ) 
+				);
+				break;
+			}
+		}
 		
 		$data ['result'] = $isShowDialog;
 		$data ['translate'] = array (

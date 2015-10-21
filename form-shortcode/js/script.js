@@ -62,7 +62,7 @@
             resizable: false,
             draggable: false,
             closeText: "hide",
-            title: data.message.title,
+            title: data.translate.title,
             buttons: [{
                 text: data.translate.save,
                 click: function(e) {
@@ -128,9 +128,12 @@
         };
 
         function callback(data) {
-            if (data && data.result)
-            	getThankYou(data)
-                //window.location.search = "successful=true";
+            if (data && data.result){
+            	var _url = window.location.origin + "/thank-you/";
+            	//getThankYou(data)
+            	//window.location.search = "successful=true";
+            	window.location.replace(_url);            	
+            }
         }
         sendRequest(data, callback, $container);
     }

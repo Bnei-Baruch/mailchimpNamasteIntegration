@@ -24,6 +24,8 @@ function UpdateMailChimpParam($userId = NULL) {
 			'COURSES' => implode ( ",", $aCourseList ) 
 	);
 	
+	
+	
 	$defParam = array (
 			'merge_vars' => $mergeVars,
 			'double_optin' => false,

@@ -38,12 +38,13 @@ class MailChimpSend {
 				'Content-Type: application/json' 
 		) );
 		$param = $param == NULL ? $this->parameters : $param;
+		
 		curl_setopt ( $curl, CURLOPT_POST, true );
 		curl_setopt ( $curl, CURLOPT_POSTFIELDS, json_encode ( $param ) );
 		curl_setopt ( $curl, CURLOPT_RETURNTRANSFER, 1 );
 		curl_setopt ( $curl, CURLOPT_SSL_VERIFYPEER, false );
 		$data = curl_exec ( $curl );
-		
+	
 		if (! $data) {
 			$error = curl_error ( $curl ) . '(' . curl_errno ( $curl ) . ')';
 			curl_close ( $curl );
