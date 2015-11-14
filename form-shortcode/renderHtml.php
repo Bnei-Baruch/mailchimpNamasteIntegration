@@ -63,8 +63,8 @@ function registerForm_func($args) {
 	            <input id="' . $field ["id"] . '" type="' . $field ["formType"] . '" name="' . $field ["id"] . '" placeholder="' . __ ( $field ["translation"], 'cfef' ) . ' *" required>
 	        </div>';
 	}
-	if (isset ( $args['enrollto'] ))
-		$str .= '<input type="hidden" id="enrollToCourse" name="enrollToCourse" value = "' . $args["enrollto"] . '">';
+	if (isset ( $args ['enrollto'] ))
+		$str .= '<input type="hidden" id="enrollToCourse" name="enrollToCourse" value = "' . $args ["enrollto"] . '">';
 	$str .= '<button type="submit" class="button medium submit">' . __ ( 'Register', 'cfef' ) . '</button></form>';
 	
 	return $str;
@@ -85,6 +85,11 @@ function loginForm_func($args) {
 	            <label for="user_pass">' . __ ( 'Password', 'cfef' ) . ' <strong>*</strong></label>
 	            <input id="user_pass" type="password" name="user_pass" placeholder="' . __ ( 'Password', 'cfef' ) . '" required>
 	        </div>';
+	$str .= '<div class="rememberMe">
+				<input name="rememberme" id="rememberme"  type="checkbox" />
+				<label for="rememberme">' . __ ( 'Remember Me', 'cfef' ) . '</label>
+       			<input type="hidden" name="redirect_to" value="' . $_SERVER ['REQUEST_URI'] . '" >
+    		</div>';
 	$str .= '<button type="submit" class="button medium submit">' . __ ( 'Log In', 'cfef' ) . '</button>';
 	$str .= '<a href = "../wp-login.php?action=lostpassword" id="rememberPass">' . __ ( 'Reset Password', 'cfef' ) . '</a> </form>';
 	return $str;
