@@ -86,7 +86,7 @@ class RregistrationFormShortcodeClass {
 		}
 		
 		$fieldListWP ['user_login'] = $fieldListWP ['user_email'];
-		$fieldListWP ['nick_name'] = empty ( $fieldListWP ['first_name'] ) ? $fieldListWP ['user_login'] : $fieldListWP ['first_name'];
+		$fieldListWP ['display_name'] = empty ( $fieldListWP ['first_name'] ) ? $fieldListWP ['user_login'] : $fieldListWP ['first_name'];
 		
 		if (get_option ( 'users_can_register' )) {
 			
@@ -232,7 +232,12 @@ class RregistrationFormShortcodeClass {
 		foreach ( $data as $key => $val ) {
 			if($key == 'user_email')
 				continue;
-			if (empty ( $val ['val'] ) || strpos ( $val ['val'], $val ['translate'] ) !== false) {
+			if (
+					empty ( $val ['val'] ) || 
+					strpos ( $val ['val'], $val ['translate'] ) !== false ||
+					($key == 'display_name' && $val ['val'] == $userData->user_nicename) ||
+					($key == 'display_name' && $val ['val'] == $userData->user_email)   
+				) {
 				$isShowDialog = array (
 						'val' => $key,
 						'val1' => $val ['val'],

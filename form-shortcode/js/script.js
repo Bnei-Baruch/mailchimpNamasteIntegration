@@ -13,7 +13,7 @@
 
     function _loadTemplates() {
         if (document.referrer.indexOf('login') > 0 || document.referrer.indexOf('registration') > 0) {
-            $.post(currentPath + '/updateProfileTpl.html', function(data) {
+            $.post(currentPath + '/updateProfileTpl.html') .done( function(data) {
             	templates.updateProfile = Handlebars.compile(data);
                 getUpdateProfile();
             });
