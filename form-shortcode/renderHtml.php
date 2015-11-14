@@ -1,8 +1,12 @@
 <?php
-load_plugin_textdomain ( 'cfef', false, REGFORM_DIR . '/languages' );
 function registerForm_func($args) {
-	if (is_user_logged_in ())
-		return "<h1>is_user_logged_in</h1>";
+	$isAdmin = wp_get_current_user ()->roles [0] == "administrator";
+	
+	if (is_user_logged_in () && ! $isAdmin)
+		return '<h1>' . __ ( 'The user is logged in.', 'cfef' ) . '</h1>';
+	elseif ($isAdmin) {
+		return '<a href="" id="registerUsersFromExel" class="button medium submit">' . __ ( 'Register', 'cfef' ) . ' From EXEL</a></form>';
+	}
 	$fieldsId = get_option ( 'mailChimpFieldList' );
 	$fieldList = array_merge ( UserProfile_GetDefaultFieldes (), $fieldsId );
 	$fieldListNew = array ();
@@ -20,9 +24,6 @@ function registerForm_func($args) {
 		
 		$fieldValue = $fieldList [$_id] != null ? $fieldList [$_id] ["value"] : "";
 		switch ($_id) {
-			case 'nick_name' :
-				$translateText = 'Your Nick Name';
-				break;
 			case 'first_name' :
 				$translateText = 'Your First Name';
 				break;
@@ -33,16 +34,12 @@ function registerForm_func($args) {
 				$translateText = 'Email';
 				$formType = 'email';
 				break;
-			case 'user_pass' :
-				$translateText = 'Password';
-				$formType = 'password';
-				break;
 			case 'country' :
-				$translateText = 'Country';
+				$translateText = 'country';
 				$fieldType = "bp";
 				break;
 			case 'city' :
-				$translateText = 'City';
+				$translateText = 'city';
 				$fieldType = "bp";
 				break;
 			default :
@@ -62,35 +59,34 @@ function registerForm_func($args) {
 	$str .= '<div class="errorMsg" style="color: red;display: none;"></div>';
 	foreach ( $fieldListNew as $field ) {
 		$str .= '<div class="form-field">				
-	            <label for="' . $field ["id"] . '">' . __( $field ["translation"], 'cfef' ) . '</label>
-	            <input id="' . $field ["id"] . '" type="' . $field ["formType"] . '" name="' . $field ["id"] . '" placeholder="' . __( $field ["translation"], 'cfef' ) . ' *" required>
+	            <label for="' . $field ["id"] . '">' . __ ( $field ["translation"], 'cfef' ) . '</label>
+	            <input id="' . $field ["id"] . '" type="' . $field ["formType"] . '" name="' . $field ["id"] . '" placeholder="' . __ ( $field ["translation"], 'cfef' ) . ' *" required>
 	        </div>';
-		// TODO:Davgur - this not beauty at all
-		if ($field ["id"] == "user_pass") {
-			$str .= '<div class="form-field">
-	            <input id="password_confirmation" type="password" name="password_confirmation" placeholder="' . __( 'Password confirmation', 'cfef' ) . ' *" required>
-	        </div>';
-		}
 	}
-	$str .= '<button type="submit" class="button medium submit">' . __( 'Register', 'cfef' ) . '</button></form>';
+	if (isset ( $args['enrollto'] ))
+		$str .= '<input type="hidden" id="enrollToCourse" name="enrollToCourse" value = "' . $args["enrollto"] . '">';
+	$str .= '<button type="submit" class="button medium submit">' . __ ( 'Register', 'cfef' ) . '</button></form>';
+	
 	return $str;
 }
 function loginForm_func($args) {
-	if (is_user_logged_in ())
-		return "<h1>is_user_logged_in</h1>";
+	if (is_user_logged_in ()) {
+		return '<h1>' . __ ( 'The user is logged in.', 'cfef' ) . '</h1>';
+	}
 	$str = '<form class="lr-form" id="loginForm" actoin="#" metod="post">';
 	$str .= '<div class="preloader"></div>';
 	$str .= '<div class="errorMsg" style="color: red;display: none;"></div>';
 	
 	$str .= '<div class="form-field">
-	            <label for="user_login">' . __( 'Email', 'cfef' ) . ' <strong>*</strong></label>
-	            <input id="user_login" type="email" name="user_login" placeholder="' . __( 'Email', 'cfef' ) . '" required>
+	            <label for="user_login">' . __ ( 'Email', 'cfef' ) . ' <strong>*</strong></label>
+	            <input id="user_login" type="email" name="user_login" placeholder="' . __ ( 'Email', 'cfef' ) . '" required>
 	        </div>';
 	$str .= '<div class="form-field">
-	            <label for="user_pass">' . __( 'Password', 'cfef' ) . ' <strong>*</strong></label>
-	            <input id="user_pass" type="password" name="user_pass" placeholder="' . __( 'Password', 'cfef' ) . '" required>
+	            <label for="user_pass">' . __ ( 'Password', 'cfef' ) . ' <strong>*</strong></label>
+	            <input id="user_pass" type="password" name="user_pass" placeholder="' . __ ( 'Password', 'cfef' ) . '" required>
 	        </div>';
-	$str .= '<button type="submit" class="button medium submit">' . __( 'Login', 'cfef' ) . '</button></form>';
+	$str .= '<button type="submit" class="button medium submit">' . __ ( 'Log In', 'cfef' ) . '</button>';
+	$str .= '<a href = "../wp-login.php?action=lostpassword" id="rememberPass">' . __ ( 'Reset Password', 'cfef' ) . '</a> </form>';
 	return $str;
 }
 

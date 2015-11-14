@@ -2,23 +2,30 @@
 function UpdateMailChimpScores($userId = NULL, $lastScores = 0) {
 	$userId = ($userId == NULL) ? get_current_user_id () : $userId;
 	
-	$scores = get_user_meta($userId, 'namaste_points', true);
+	$scores = get_user_meta ( $userId, 'namaste_points', true );
 	
-	$sendObj = new MailChimpSend ( 'setUserData');
-	$sendObj->parameters ['merge_vars'] = array ( 'SCORES' => $scores );
+	$sendObj = new MailChimpSend ( 'setUserData' );
+	$sendObj->parameters ['merge_vars'] = array (
+			'SCORES' => $scores 
+	);
 	$request = $sendObj->SendToMailChimp ();
 }
-
 function UpdateMailChimpParam($userId = NULL) {
+	global $wpdb;
 	$userId = ($userId == NULL) ? get_current_user_id () : $userId;
 	$fieldList = UserProfile_GetDefaultFieldes ( $userId );
+	$aCourseList = $wpdb->get_col ( $wpdb->prepare ( "SELECT course_id FROM " . NAMASTE_STUDENT_COURSES . " WHERE user_id = %d AND status = %d", $userId, 'enrolled' ) );
 	
 	$mergeVars = array (
 			'FNAME' => $fieldList ['first_name'] ["val"],
 			'LNAME' => $fieldList ['last_name'] ["val"],
 			'CITY' => $fieldList ['city'] ["val"],
-			'COUNTRY' => $fieldList ['country'] ["val"]
+			'COUNTRY' => $fieldList ['country'] ["val"],
+			'COURSES' => implode ( ",", $aCourseList ) 
 	);
+	
+	
+	
 	$defParam = array (
 			'merge_vars' => $mergeVars,
 			'double_optin' => false,
@@ -30,8 +37,8 @@ function UpdateMailChimpParam($userId = NULL) {
 	$userEmail = $fieldList ["user_email"] ["val"];
 	$sendObj = new MailChimpSend ( 'listSubscribe', $userEmail, $mailChimpid );
 	$userInfo = $sendObj->GetCurrentUserInfo ();
-	
 	$paramTemp = $sendObj->GetParametrs ();
+	
 	if (count ( $userInfo->data ) > 0) {
 		$sendObj->metodId = "setUserData";
 		$paramTemp ['replace_interests'] = true;

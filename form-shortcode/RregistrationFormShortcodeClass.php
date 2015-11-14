@@ -1,9 +1,13 @@
 <?php
 /* It's base on LoginWithAjax plugin - maybe more better to use this plugin for extending class */
 class RregistrationFormShortcodeClass {
-	public static function login($user_login, $user_password) {
+	public static function login() {
+		global $wpdb;
 		$return = array ();
-		$user_login = get_user_by_email ( $user_login )->data->user_login;
+		parse_str ( $_POST ['userData'], $userData );
+		$user_login = get_user_by_email ( $userData ['user_login'] )->data->user_login;
+		$user_password = $userData ['user_pass'];
+		
 		if (! empty ( $user_login ) && ! empty ( $user_password ) && trim ( $user_login ) != '' && trim ( $user_password ) != '') {
 			$credentials = array (
 					'user_login' => $user_login,
@@ -16,24 +20,27 @@ class RregistrationFormShortcodeClass {
 			$user_role = 'null';
 			if (strtolower ( get_class ( $loginResult ) ) == 'wp_user') {
 				$return ['result'] = true;
-				$return ['message'] = __ ( "Login Successful, redirecting...", 'login' );
+				$return ['message'] = __ ( 'You have logged in successfully.' );
+				// Able enroll user on login
+				// self::_enrollToCourse ( $userData ['courseId'], $loginResult->ID );
 			} elseif (strtolower ( get_class ( $loginResult ) ) == 'wp_error') {
 				// User login failed
-				/* @var WP_Error $loginResult */
+				// @var WP_Error $loginResult
 				$return ['result'] = false;
 				$return ['error'] = $loginResult->get_error_message ();
 			} else {
 				// Undefined Error
 				$return ['result'] = false;
-				$return ['error'] = __ ( 'An undefined error has ocurred', 'login' );
+				$return ['error'] = __ ( 'An error occurred. Please try again later.' );
 			}
 		} else {
 			$return ['result'] = false;
-			$return ['error'] = __ ( 'Please supply your username and password.', 'login' );
+			$return ['error'] = __ ( '<strong>ERROR</strong>: Invalid username or incorrect password.' );
 		}
 		$return ['action'] = 'login';
-		// Return the result array with errors etc.
-		return $return;
+		
+		echo json_encode ( $return );
+		wp_die ();
 	}
 	
 	/**
@@ -41,54 +48,129 @@ class RregistrationFormShortcodeClass {
 	 *
 	 * @return string
 	 */
-	public static function register($fieldListWP, $fieldListBP, $pass_conf) {
+	public static function register($userData = NULL) {
+		global $wpdb;
+		$fieldList = UserProfile_GetDefaultFieldes ( - 1 );
+		$fieldListWP = array ();
+		$fieldListBP = array ();
 		$return = array ();
-		if ($pass_conf != $fieldListWP ['user_pass']) {
-			$return ['result'] = false;
-			$return ['error'] = __ ( 'Password not confirmed.', 'login' );
-			$return ['msg'] = $fieldListWP ['user_pass'];
-			$return ['$pass_conf'] = $pass_conf;
-			return $return;
+		$isFromExel = false;
+		
+		if (is_null ( $userData ) || empty ( $userData ))
+			$userData = parse_str ( $_POST ['userData'], $fieldsData );
+		else {
+			$isFromExel = true;
+			$fieldsData = $userData;
 		}
+		
+		// break if two password fieldes are not equal
+		/*
+		 * if ($fieldsData ['password_confirmation'] != $fieldsData ['user_pass']) {
+		 * $return ['result'] = false;
+		 * $return ['error'] = __ ( 'Password not confirmed.', 'login' );
+		 * $return ['msg'] = $fieldsData ['user_pass'];
+		 * $return ['$pass_conf'] = $fieldsData ['password_confirmation'];
+		 * echo json_encode ( $return );
+		 * if (! $isFromExel) {
+		 * wp_die ();
+		 * }
+		 * }
+		 */
+		
+		$fieldListWP ['user_pass'] = wp_generate_password ();
+		foreach ( $fieldList as $key => $val ) {
+			if ($fieldList [$key] ['type'] == "wp")
+				$fieldListWP [$key] = $fieldsData [$key] ? $fieldsData [$key] : $fieldList [$key] ['val'];
+			else
+				$fieldListBP [$key] = $fieldsData [$key] ? $fieldsData [$key] : $fieldList [$key] ['val'];
+		}
+		
+		$fieldListWP ['user_login'] = $fieldListWP ['user_email'];
+		$fieldListWP ['nick_name'] = empty ( $fieldListWP ['first_name'] ) ? $fieldListWP ['user_login'] : $fieldListWP ['first_name'];
+		
 		if (get_option ( 'users_can_register' )) {
 			
 			if (! function_exists ( 'register_new_user' )) {
-				include_once ('registration.php'); // in ajax we don't have access to this function, so include our own copy of the function
+				// in ajax we don't have access to this function, so include our own copy of the function
+				include_once ('registration.php');
 			}
 			// if it's not error - this is user id
 			$fieldListWP ['user_email'] = sanitize_email ( $fieldListWP ['user_email'] );
+			if (empty ( $fieldListWP ['user_email'] )) {
+				$return ['result'] = false;
+				$return ['error'] = __ ( '<strong>ERROR</strong>: The email address isn&#8217;t correct.' );
+				echo json_encode ( $return );
+				wp_die ();
+			}
+			
 			$userByEmail = get_user_by_email ( $fieldListWP ['user_email'] );
 			
 			if ($userByEmail) {
 				$return ['result'] = false;
-				$return ['error'] = __ ( 'This email was registred.', 'login' );
-				return $return;
+				$return ['error'] = __ ( 'Sorry, that email address is already used!' );
+				if (! $isFromExel) {
+					echo json_encode ( $return );
+					wp_die ();
+				} else {
+					echo '+';
+					return;
+				}
 			}
 			$fieldList = array (
 					fieldListWP => $fieldListWP,
 					fieldListBP => $fieldListBP 
 			);
-			$errors = bp_core_signup_user ( $fieldListWP ['user_login'], $fieldListWP ['user_pass'], $fieldListWP ['user_email'], $fieldList );
-			if (! is_wp_error ( $errors )) {
+			
+			if (is_numeric ( $fieldsData ['enrollToCourse'] ))
+				$fieldList ['enrollToCourse'] = $fieldsData ['enrollToCourse'];
+			
+			$registerResult = bp_core_signup_user ( $fieldListWP ['user_login'], $fieldListWP ['user_pass'], $fieldListWP ['user_email'], $fieldList );
+			if (! is_wp_error ( $registerResult )) {
 				// Success
 				$return ['result'] = true;
-				$return ['userId'] = $errors;
-				$return ['message'] = __ ( 'Registration complete. Please check your e-mail.', 'login' );
+				$return ['userId'] = $registerResult;
+				
+				if (is_numeric ( $fieldsData ['enrollToCourse'] ))
+					self::_enrollToCourse ( $fieldsData ['enrollToCourse'], $registerResult );
+				
+				$return ['message'] = array (
+						'title' => __ ( 'Registration, check you mail. Title', 'qode' ),
+						'content' => __ ( 'Registration, check you mail. Content', 'qode' ) 
+				);
+				$return ['buttons'] = array (
+						'toHome' => array (
+								'text' => __ ( 'Go to home page' ),
+								'url' => get_site_url () 
+						) 
+				);
 			} else {
 				// Something's wrong
 				$return ['result'] = false;
-				$return ['error'] = ($errors == false) ? __ ( 'An undefined error has ocurred', 'login' ) : $errors->get_error_message ();
+				$return ['error'] = ($registerResult == false) ? __ ( 'An error occurred. Please try again later.' ) : $registerResult->get_error_message ();
 			}
 			$return ['action'] = 'register';
 		} else {
 			$return ['result'] = false;
-			$return ['error'] = __ ( 'Registration has been disabled.', 'login' );
+			$return ['error'] = __ ( 'User registration has been disabled.' );
 		}
-		return $return;
+		echo json_encode ( $return );
+		if (! $isFromExel) {
+			wp_die ();
+		}
+	}
+	private static function _enrollToCourse($courseId, $userId) {
+		$_course = new NamasteLMSCourseModel ();
+		// enroll in course
+		$course = $_course->select ( $courseId );
+		$enroll_mode = get_post_meta ( $course->ID, 'namaste_enroll_mode', true );
+		
+		// if already enrolled, just skip this altogether
+		$_course->enroll ( $userId, $course->ID, 'enrolled' );
 	}
 	
 	// Reads ajax login creds via POSt, calls the login script and interprets the result
 	public static function remember() {
+		global $wpdb, $wp_hasher;
 		$return = array (); // What we send back
 		$result = retrieve_password ();
 		if ($result === true) {
@@ -109,31 +191,92 @@ class RregistrationFormShortcodeClass {
 		// Return the result array with errors etc.
 		return $return;
 	}
-	private static function wpmu_signup_user($user, $user_pass, $user_email, $meta = array()) {
-		global $wpdb;
+	public static function fromExelRregistration() {
+		$row = 0;
+		$arrOfIndex = array (
+				'first_name' => - 1,
+				'last_name' => - 1,
+				'user_email' => - 1,
+				'country' => - 1,
+				'city' => - 1 
+		);
+		if (($handle = fopen ( MAILCHIMPINT_DIR . "/users.csv", "r" )) !== FALSE) {
+			while ( ($data = fgetcsv ( $handle, 1000, "," )) !== FALSE ) {
+				if ($row == 0) {
+					$maxI = count ( $data );
+					for($cI = 0; $cI < $maxI; $cI ++) {
+						$arrOfIndex [$data [$cI]] = $cI;
+					}
+				} else {
+					$arrOfData = array (
+							'last_name' => ' ',
+							'display_name' => ' ',
+							'city' => ' ' 
+					);
+					foreach ( $arrOfIndex as $key => $c ) {
+						$arrOfData [$key] = $data [$c];
+					}
+					// id of course for enroll
+					$arrOfData ['enrollToCourse'] = 1957;
+					self::register ( $arrOfData );
+				}
+				$row ++;
+			}
+			fclose ( $handle );
+		}
+	}
+	public static function getUpdateProfile() {
+		$isShowDialog = false;
+		$data = UserProfile_GetDefaultFieldes ();
+		$userData = get_user_by_email ( $data ['user_email'] ['val'] )->data;
+		foreach ( $data as $key => $val ) {
+			if($key == 'user_email')
+				continue;
+			if (empty ( $val ['val'] ) || strpos ( $val ['val'], $val ['translate'] ) !== false) {
+				$isShowDialog = array (
+						'val' => $key,
+						'val1' => $val ['val'],
+						'val2' => $val ['translate'],
+						'strpos' => strpos ( $val ['val'], $val ['translate'] ) 
+				);
+				break;
+			}
+		}
 		
-		// Format data
-		$user = preg_replace ( '/\s+/', '', sanitize_user ( $user, true ) );
-		$user_email = sanitize_email ( $user_email );
-		$key = substr ( md5 ( time () . rand () . $user_email ), 0, 16 );
-		// $meta['password'] = $user_pass;
-		$meta = serialize ( $meta );
-		$table = ($wpdb->signups != null) ? $wpdb->signups : 'wp_signups';
+		$data ['result'] = $isShowDialog;
+		$data ['translate'] = array (
+				'title' => __ ( 'Update profile title', 'cfef' ),
+				'save' => __ ( 'Save' ),
+				'cancel' => __ ( 'Cancel' ) 
+		);
 		
-		$temp = $wpdb->insert ( $table, array (
-				'domain' => '',
-				'path' => '',
-				'title' => '',
-				'new_role' => "subscriber",
-				'add_to_blog' => get_current_blog_id (),
-				'user_login' => $user,
-				'user_email' => $user_email,
-				'registered' => current_time ( 'mysql', true ),
-				'activation_key' => $key,
-				'meta' => $meta 
-		), '%s' );
+		wp_die ( json_encode ( $data ) );
+	}
+	public static function setUpdateProfile() {
+		$fieldList = UserProfile_GetDefaultFieldes ( - 1 );
+		$fieldListWP = array ();
+		$fieldListBP = array ();
+		$return = array ();
 		
-		wpmu_signup_user_notification ( $user, $user_email, $key, $meta );
+		$user_id = get_current_user_id ();
+		$userData = parse_str ( $_POST ['userData'], $fieldsData );
+		foreach ( $fieldList as $key => $val ) {
+			if ($fieldList [$key] ['type'] == "wp")
+				$fieldListWP [$key] = $fieldsData [$key] ? $fieldsData [$key] : $fieldList [$key] ['val'];
+			else
+				$fieldListBP [$key] = $fieldsData [$key] ? $fieldsData [$key] : $fieldList [$key] ['val'];
+		}
+		
+		UserProfile_SetDefaultFieldes ( $fieldListWP, $fieldListBP, $user_id );
+		$args = array (
+				'ID' => $user_id,
+				'display_name' => $fieldListWP ['display_name'] 
+		);
+		wp_update_user ( $args );
+		
+		$data ['result'] = true;
+		
+		wp_die ( json_encode ( $data ) );
 	}
 }
 

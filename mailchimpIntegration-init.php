@@ -1,15 +1,13 @@
 <?php
 /*
  * Plugin Name: AAAMailChimp Integration(Davgur)
- * Description: Ð”Ð¾Ð±Ð°Ð²Ð»Ñ�ÐµÑ‚ Ñ‡ÐµÐºÐ±Ð¾ÐºÑ� "ÐŸÐ¾Ð´Ð¿Ð¸Ñ�ÐºÐ° Ð½Ð° Ð½Ð¾Ð²Ð¾Ñ�Ñ‚Ð¸" Ð² Ñ„Ð¾Ñ€Ð¼Ñƒ Ñ€ÐµÐ³Ð¸Ñ�Ñ‚Ñ€Ð°Ñ†Ð¸Ð¸
- * Version: 0.2
- * Author: CasePress
- * Author URI: http://casepress.org
+ * Description:
  * License: MIT License
  */
+load_plugin_textdomain ( 'cfef', false, dirname ( plugin_basename ( __FILE__ ) ) . '/languages/' );
+
 define ( 'MAILCHIMPINT_DIR', untrailingslashit ( dirname ( __FILE__ ) ) );
 define ( 'MAILCHIMPINT_DIR_URL', untrailingslashit ( plugins_url ( '', __FILE__ ) ) );
-
 require_once MAILCHIMPINT_DIR . '/includes/mailchimp-api.php';
 require_once MAILCHIMPINT_DIR . '/includes/section-actions.php';
 require_once MAILCHIMPINT_DIR . '/includes/list-actions.php';
@@ -34,7 +32,7 @@ add_action ( 'delete_user', 'UnsubscribeMailChimp' );
 
 add_action ( 'publish_namaste_course', 'AddCourseToMailChimp', 10, 2 );
 
-add_action ( 'namaste_earned_points', 'UpdateMailChimpScores', 10, 2 );
+add_action ( 'namaste_earned_points', 'UpdateMailChimpScores' );
 
 add_action ( 'save_post_namaste_course', 'CreateGroupAndForumForCourse::SavePost', 99, 3 );
 
@@ -43,11 +41,53 @@ add_action ( 'namaste_enrolled_course', function ($a, $b, $c) {
 	CreateGroupAndForumForCourse::EnrolledCourse ( $a, $b, $c );
 }, 10, 3 );
 
+// add_filter ( 'bp_core_signup_send_validation_email_message', 'mailchimpBpIntagration_activation_message', 10, 3 );
+add_filter ( 'bp_core_signup_send_validation_email_subject', 'mailchimpBpIntagration_activation_subject', 10, 5 );
+
+add_filter ( 'retrieve_password_message', 'mailchimpBpIntagration_retrieve_message', 10, 2 );
+add_filter ( 'retrieve_password_title', 'mailchimpBpIntagration_retrieve_title', 10, 1 );
+
 // add_action ( 'updated_namaste_unenroll_meta', 'CreateGroupAndForumForCourse::UnsubscribeCourse');
 function mailChimpInt_addToMailChimp($user_id, $key, $user) {
-	wp_new_user_notification ( $user_id, __ ( 'Your password' ) );
+	if (is_numeric ( $user ['meta'] ['enrollToCourse'] )) {
+		register_users_from_exel ( $user_id, $user ['meta'] ['fieldListWP'] ['user_pass'] );
+	} else {
+		register_users_from_site ( $user_id, $user ['meta'] ['fieldListWP'] ['user_pass'] );
+	}
 	UserProfile_SetDefaultFieldes ( $user ['meta'] ['fieldListWP'], $user ['meta'] ['fieldListBP'], $user_id );
 	UpdateMailChimpParam ( $user_id );
+}
+function register_users_from_site($user_id, $user_pass) {
+	$user = get_user_by ( 'id', $user_id );
+	$subject = 'Логин и пароль для сайта kabacademy.com.';
+	$message = "Вы успешно зарегистрированы на сайте Международной академии каббалы.<br /><br />";
+	$message .= sprintf ( __ ( 'Username: %s' ), $user->user_login ) . "<br /><br />";
+	$message .= __ ( 'Password: ' ) . $user_pass . '<br /><br />';
+	$message .= 'Чтобы установить новый пароль, перейдите по ссылке: ' . wp_login_url ( home_url () . '/login/' ) . '&action=lostpassword';
+	$message .= '<br /><br />';
+	
+	$headers = array (
+			'Content-type: text/html' 
+	);
+	
+	wp_mail ( $user->user_email, stripslashes ( $subject ), $message, $headers );
+}
+function register_users_from_exel($user_id, $user_pass) {
+	$user = get_user_by ( 'id', $user_id );
+	
+	$subject = 'Логин и пароль для сайта kabacademy.com';
+	
+	$msg = 'Ваши данные для входа на сайте kabacademy.com:<br /><br />';
+	$msg .= 'Имя пользователя: ' . $user->user_email . '<br />';
+	$msg .= 'Новый пароль: ' . $user_pass . '<br /><br />';
+	$msg .= '<a href="' . get_site_url () . '/login">Авторизоваться на сайте >></a><br /><br />';
+	$msg .= 'Чтобы установить новый пароль, перейдите по ссылке: ' . wp_login_url ( home_url () . '/login/' ) . '&action=lostpassword';
+	$msg .= '<br /><br />';
+	
+	$headers = array (
+			'Content-type: text/html' 
+	);
+	wp_mail ( $user->user_email, stripslashes ( $subject ), $msg, $headers );
 }
 function rightToLogFileDavgur_PL($logText) {
 	$msg = $logText;

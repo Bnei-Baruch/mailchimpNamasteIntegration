@@ -14,7 +14,9 @@
 	z-index: 2;
 	background: #FFF url("./ajax-loader.gif") center center no-repeat;
 }
-
+#registrationForm.lr-form .form-field{
+    margin-bottom: 12px;
+}
 #registrationForm.lr-form, #loginForm .lr-form {
 	width: 100%
 }
@@ -40,3 +42,26 @@
 #registrationForm.lr-form input, #loginForm.lr-form input {
 	padding: 15px;
 }
+
+#registrationForm  .button.medium {
+    font: normal 300 30px/58px 'Roboto Condensed', sans-serif;
+    color: white;
+    padding: 0 40px;
+    height: auto;
+    background-color: #e0922f;
+}
+
+#loginForm  #rememberPass {
+    display: block;
+}
+
+/*Dialog - redefine because theme styles */
+.ui-widget-overlay,  .ui-dialog{
+	z-index: 1001;
+}
+#updateProfileForm form .formItem{
+	margin-top: 10px;
+} 
+#updateProfileForm form input.text{
+	width: 100%; display: block;
+} 
