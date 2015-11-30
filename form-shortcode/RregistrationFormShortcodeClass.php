@@ -11,9 +11,15 @@ class RregistrationFormShortcodeClass {
 		if (! empty ( $user_login ) && ! empty ( $user_password ) && trim ( $user_login ) != '' && trim ( $user_password ) != '') {
 			$credentials = array (
 					'user_login' => $user_login,
-					'user_password' => $user_password 
+					'user_password' => $user_password,
+					'remember'		=> $userData['rememerme']
 			); // ,
 			   // 'remember' => ! empty ( $_REQUEST ['rememberme'] )
+			if(isset($userData['rememberme'])){ // if user check the remember me checkbox
+						$expiration_date = 60 * 60 * 24 * 356 + time(); # year
+						$domain = ($_SERVER['HTTP_HOST'] != 'localhost') ? $_SERVER['HTTP_HOST'] : false;
+						$rc = setcookie('username', $userData['user_login'], $expiration_date,"/", $domain);
+			} 
 			
 			$loginResult = wp_signon ( $credentials, true );
 			// $loginResult = wp_authenticate($user_login, $user_password);

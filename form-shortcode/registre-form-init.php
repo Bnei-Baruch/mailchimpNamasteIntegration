@@ -31,4 +31,23 @@ function regForm_init() {
 	add_shortcode ( 'loginForm', 'loginForm_func' );
 }
 
+function auto_login(){
+	
+	$loginpageid = 190;
+	if (!is_user_logged_in() && is_page($loginpageid)) { //only attempt to auto-login if at www.site.com/auto-login/ (i.e. www.site.com/?p=190 )
+		if (isset($_COOKIE['username'])){
+		
+			$user = get_user_by('email', $_COOKIE['username']);
+			$user_id = $user->ID;
+			//login
+			wp_set_current_user($user_id, $_COOKIE['username']);
+			wp_set_auth_cookie($user_id);
+			do_action('wp_login', $_COOKIE['username']);
+			//redirect to home page after logging in (i.e. don't show content of www.site.com/?p=1234 )
+			wp_redirect( home_url() );
+			exit;
+		}
+	}
+}
+add_action('wp', 'auto_login');
 ?>

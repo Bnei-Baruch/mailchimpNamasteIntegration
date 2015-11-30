@@ -70,24 +70,30 @@ function registerForm_func($args) {
 	return $str;
 }
 function loginForm_func($args) {
+	
+	$username = isset($_COOKIE['username']) ? $_COOKIE['username'] : "";;
+	//$password = isset($_COOKIE['password']) ? $_COOKIE['password'] : "";
+	$forgetmenot = isset($_COOKIE['username']) ? " checked=\"checked\"" : "";
+	
 	if (is_user_logged_in ()) {
 		return '<h1>' . __ ( 'The user is logged in.', 'cfef' ) . '</h1>';
 	}
+		
 	$str = '<form class="lr-form" id="loginForm" actoin="#" metod="post">';
 	$str .= '<div class="preloader"></div>';
 	$str .= '<div class="errorMsg" style="color: red;display: none;"></div>';
 	
 	$str .= '<div class="form-field">
 	            <label for="user_login">' . __ ( 'Email', 'cfef' ) . ' <strong>*</strong></label>
-	            <input id="user_login" type="email" name="user_login" placeholder="' . __ ( 'Email', 'cfef' ) . '" required>
+	            <input id="user_login" type="email" name="user_login" placeholder="' . __ ( 'Email', 'cfef' ) . '" value="'. $username .'" required>
 	        </div>';
 	$str .= '<div class="form-field">
 	            <label for="user_pass">' . __ ( 'Password', 'cfef' ) . ' <strong>*</strong></label>
 	            <input id="user_pass" type="password" name="user_pass" placeholder="' . __ ( 'Password', 'cfef' ) . '" required>
 	        </div>';
 	$str .= '<div class="rememberMe">
-				<input name="rememberme" id="rememberme"  type="checkbox" />
-				<label for="rememberme">' . __ ( 'Remember Me', 'cfef' ) . '</label>
+				<input name="rememberme" id="rememberme"  type="checkbox" '. $forgetmenot .' />
+				<label for="rememberme">' . __ ( 'Remember Me' ) . '</label>
        			<input type="hidden" name="redirect_to" value="' . $_SERVER ['REQUEST_URI'] . '" >
     		</div>';
 	$str .= '<button type="submit" class="button medium submit">' . __ ( 'Log In', 'cfef' ) . '</button>';
