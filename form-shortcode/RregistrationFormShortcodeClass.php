@@ -12,14 +12,14 @@ class RregistrationFormShortcodeClass {
 			$credentials = array (
 					'user_login' => $user_login,
 					'user_password' => $user_password,
-					'remember'		=> $userData['rememerme']
+					'remember' => $userData ['rememerme'] 
 			); // ,
 			   // 'remember' => ! empty ( $_REQUEST ['rememberme'] )
-			if(isset($userData['rememberme'])){ // if user check the remember me checkbox
-						$expiration_date = 60 * 60 * 24 * 356 + time(); # year
-						$domain = ($_SERVER['HTTP_HOST'] != 'localhost') ? $_SERVER['HTTP_HOST'] : false;
-						$rc = setcookie('username', $userData['user_login'], $expiration_date,"/", $domain);
-			} 
+			if (isset ( $userData ['rememberme'] )) { // if user check the remember me checkbox
+				$expiration_date = 60 * 60 * 24 * 356 + time (); // year
+				$domain = ($_SERVER ['HTTP_HOST'] != 'localhost') ? $_SERVER ['HTTP_HOST'] : false;
+				$rc = setcookie ( 'username', $userData ['user_login'], $expiration_date, "/", $domain );
+			}
 			
 			$loginResult = wp_signon ( $credentials, true );
 			// $loginResult = wp_authenticate($user_login, $user_password);
@@ -236,21 +236,43 @@ class RregistrationFormShortcodeClass {
 		$data = UserProfile_GetDefaultFieldes ();
 		$userData = get_user_by_email ( $data ['user_email'] ['val'] )->data;
 		foreach ( $data as $key => $val ) {
-			if($key == 'user_email')
+			if ($key == 'user_email')
 				continue;
-			if (
-					empty ( $val ['val'] ) || 
-					strpos ( $val ['val'], $val ['translate'] ) !== false ||
-					($key == 'display_name' && $val ['val'] == $userData->user_nicename) ||
-					($key == 'display_name' && $val ['val'] == $userData->user_email)   
-				) {
+			//special functional for gender (becouse it's select and not text box)
+			if ($key == 'gender') {
+				$translate = array (
+						'gender' => $val['translate'],
+						'male' => __ ( 'male', 'cfef' ),
+						'female' => __ ( 'female', 'cfef' )
+				);
+				if (! empty ( $val ['val'] )) {
+					$dataGender = array (
+							"male" => '',
+							"female" => '',
+							'translate' => $translate 
+					);
+					$dataGender [$val ['val']] = 'selected';
+					$data ["gender"] = $dataGender;
+					continue;
+				}
+
+				$data ["gender"]['translate'] = $translate;
+				$isShowDialog = array (
+						'val' => $key,
+						'val1' => $val ['val'],
+						'val2' => $translate 
+				);
+				continue;
+			}
+			//check is fields are empty or has default value
+			if (empty ( $val ['val'] ) || strpos ( $val ['val'], $val ['translate'] ) !== false || ($key == 'display_name' && $val ['val'] == $userData->user_nicename) || ($key == 'display_name' && $val ['val'] == $userData->user_email)) {
 				$isShowDialog = array (
 						'val' => $key,
 						'val1' => $val ['val'],
 						'val2' => $val ['translate'],
 						'strpos' => strpos ( $val ['val'], $val ['translate'] ) 
 				);
-				break;
+				continue;
 			}
 		}
 		

@@ -5,8 +5,7 @@ function UserProfile_GetDefaultFieldes($user_id = 0) {
 			'first_name' => array (
 					'val' => '',
 					'type' => 'wp',
-					'translate' => __('Your First Name',  'cfef')
-					
+					'translate' => __('Your First Name',  'cfef')					
 			),
 			'last_name' => array (
 					'val' => '',

@@ -78,6 +78,17 @@ msgstr "Ваша страна"
 msgid "city"
 msgstr "Ваш город"
 
+#: form-shortcode.php:108
+#@ cfef
+msgid "age"
+msgstr "Возраст"
+
+#: form-shortcode.php:114
+#@ cfef
+msgid "gender"
+msgstr "Пол"
+
+
 
 #: form-shortcode.php:118
 #@ cfef
