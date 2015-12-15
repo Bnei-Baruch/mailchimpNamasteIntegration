@@ -22,6 +22,7 @@ if (defined ( 'DOING_AJAX' ) && DOING_AJAX) {
 	add_action ( 'wp_ajax_nopriv_loginRregistrationFormShortcode', 'RregistrationFormShortcodeClass::login', 30 );
 	add_action ( 'wp_ajax_getUpdateProfileRregistrationFormShortcode', 'RregistrationFormShortcodeClass::getUpdateProfile' );
 	add_action ( 'wp_ajax_setUpdateProfileRregistrationFormShortcode', 'RregistrationFormShortcodeClass::setUpdateProfile' );
+	add_action('wp', 'RregistrationFormShortcodeClass::autoLogin');
 }
 // add_action ( 'wp_ajax_nopriv_rememberRregistrationFormShortcode', 'RregistrationFormShortcodeClass::remember', 30 );
 

@@ -48,6 +48,27 @@ class RregistrationFormShortcodeClass {
 		echo json_encode ( $return );
 		wp_die ();
 	}
+	/**
+	 * auto login by cookies
+	 * TODO: David - I'm think that need remove dependence from post id
+	 */
+	public static function autoLogin() {
+		$loginpageid = 190;
+		if (! is_user_logged_in () && is_page ( $loginpageid )) { // only attempt to auto-login if at www.site.com/auto-login/ (i.e. www.site.com/?p=190 )
+			if (isset ( $_COOKIE ['username'] )) {
+				
+				$user = get_user_by ( 'email', $_COOKIE ['username'] );
+				$user_id = $user->ID;
+				// login
+				wp_set_current_user ( $user_id, $_COOKIE ['username'] );
+				wp_set_auth_cookie ( $user_id );
+				do_action ( 'wp_login', $_COOKIE ['username'] );
+				// redirect to home page after logging in (i.e. don't show content of www.site.com/?p=1234 )
+				wp_redirect ( home_url () );
+				exit ();
+			}
+		}
+	}
 	
 	/**
 	 * Checks post data and registers user, then exits
@@ -238,12 +259,12 @@ class RregistrationFormShortcodeClass {
 		foreach ( $data as $key => $val ) {
 			if ($key == 'user_email')
 				continue;
-			//special functional for gender (becouse it's select and not text box)
+				// special functional for gender (becouse it's select and not text box)
 			if ($key == 'gender') {
 				$translate = array (
-						'gender' => $val['translate'],
+						'gender' => $val ['translate'],
 						'male' => __ ( 'male', 'cfef' ),
-						'female' => __ ( 'female', 'cfef' )
+						'female' => __ ( 'female', 'cfef' ) 
 				);
 				if (! empty ( $val ['val'] )) {
 					$dataGender = array (
@@ -255,8 +276,8 @@ class RregistrationFormShortcodeClass {
 					$data ["gender"] = $dataGender;
 					continue;
 				}
-
-				$data ["gender"]['translate'] = $translate;
+				
+				$data ["gender"] ['translate'] = $translate;
 				$isShowDialog = array (
 						'val' => $key,
 						'val1' => $val ['val'],
@@ -264,7 +285,7 @@ class RregistrationFormShortcodeClass {
 				);
 				continue;
 			}
-			//check is fields are empty or has default value
+			// check is fields are empty or has default value
 			if (empty ( $val ['val'] ) || strpos ( $val ['val'], $val ['translate'] ) !== false || ($key == 'display_name' && $val ['val'] == $userData->user_nicename) || ($key == 'display_name' && $val ['val'] == $userData->user_email)) {
 				$isShowDialog = array (
 						'val' => $key,
