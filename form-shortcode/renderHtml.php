@@ -85,11 +85,11 @@ function loginForm_func($args) {
 	
 	$str .= '<div class="form-field">
 	            <label for="user_login">' . __ ( 'Email', 'cfef' ) . ' <strong>*</strong></label>
-	            <input id="user_login" type="email" name="user_login" placeholder="' . __ ( 'Email', 'cfef' ) . '" value="'. $username .'" required>
+	            <input id="user_login" type="email" name="user_login" placeholder="' . __ ( 'Email', 'cfef' ) . '" value="'. $username .'" required autocomplete="on">
 	        </div>';
 	$str .= '<div class="form-field">
 	            <label for="user_pass">' . __ ( 'Password', 'cfef' ) . ' <strong>*</strong></label>
-	            <input id="user_pass" type="password" name="user_pass" placeholder="' . __ ( 'Password', 'cfef' ) . '" required>
+	            <input id="user_pass" type="password" name="user_pass" placeholder="' . __ ( 'Password', 'cfef' ) . '" required autocomplete="on">
 	        </div>';
 	$str .= '<div class="rememberMe">
 				<input name="rememberme" id="rememberme"  type="checkbox" '. $forgetmenot .' />

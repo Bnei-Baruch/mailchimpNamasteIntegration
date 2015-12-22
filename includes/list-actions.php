@@ -15,16 +15,15 @@ function UpdateMailChimpParam($userId = NULL) {
 	$userId = ($userId == NULL) ? get_current_user_id () : $userId;
 	$fieldList = UserProfile_GetDefaultFieldes ( $userId );
 	$aCourseList = $wpdb->get_col ( $wpdb->prepare ( "SELECT course_id FROM " . NAMASTE_STUDENT_COURSES . " WHERE user_id = %d AND status = %d", $userId, 'enrolled' ) );
-	
 	$mergeVars = array (
 			'FNAME' => $fieldList ['first_name'] ["val"],
 			'LNAME' => $fieldList ['last_name'] ["val"],
 			'CITY' => $fieldList ['city'] ["val"],
 			'COUNTRY' => $fieldList ['country'] ["val"],
+			'AGE' => $fieldList ['age'] ["val"],
+			'GENDER' => $fieldList ['gender'] ["val"],
 			'COURSES' => implode ( ",", $aCourseList ) 
 	);
-	
-	
 	
 	$defParam = array (
 			'merge_vars' => $mergeVars,
