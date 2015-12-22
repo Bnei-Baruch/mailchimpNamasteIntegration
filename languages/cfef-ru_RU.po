@@ -89,6 +89,16 @@ msgid "gender"
 msgstr "Пол"
 
 
+#: form-shortcode/RregistrationFormShortcodeClass.php:266
+#@ cfef
+msgid "male"
+msgstr "муж"
+
+#: form-shortcode/RregistrationFormShortcodeClass.php:267
+#@ cfef
+msgid "female"
+msgstr "жен"
+
 
 #: form-shortcode.php:118
 #@ cfef
