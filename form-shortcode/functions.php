@@ -25,6 +25,7 @@ function UserProfile_GetDefaultFieldes($user_id = 0) {
 	);
 	
 	foreach ( get_option ( 'mailChimpFieldList' ) as $key => $val ) {
+		error_log(  'Davgur'.print_r($val, true ) );
 		$fieldVal = $user_id == - 1 ? "" : xprofile_get_field_data ( $val, $user_id );
 		$fieldList [$val] = array (
 				'val' => $fieldVal,
@@ -45,18 +46,20 @@ function UserProfile_GetDefaultFieldes($user_id = 0) {
 }
 function UserProfile_SetDefaultFieldes($fieldListWP, $fieldListBP, $user_id = 1) {
 	if ($fieldListWP != null) {
-		// If need more complexy display_name can use - bp_core_get_user_displayname
+		// If need more complexy display_name can use - bp_core_get_user_displayname		
 		if(empty($fieldListWP ['display_name'])) 
 				$fieldListWP ['display_name'] = $fieldListWP ['last_name'] . ' ' . $fieldListWP ['first_name'];
-		
-		foreach ( $fieldListWP as $key => $val ) {
-			if ($key == "user_pass")
-				continue;
-			
-			update_user_meta ( $user_id, $key, $val );
-		}
+
+		$user = get_user_by("id", $user_id);
+		//don't update password and email
+		unset($fieldListWP["user_pass"]);
+		unset($fieldListWP["user_email"]);
+		$fieldListWP["ID"] = $user_id;
+		$msg = print_r( $fieldListWP, true);
+		rightToLogFileDavgur_PL($msg);
+		wp_update_user ( $fieldListWP );		
 	}
-	
+
 	$groupParam = array (
 			'user_id' => $user_id,
 			'fetch_fields' => true,
@@ -87,7 +90,7 @@ function UserProfile_SetDefaultFieldes($fieldListWP, $fieldListBP, $user_id = 1)
 			$fieldId = xprofile_insert_field ( $newFieldOpt );
 		}
 		$fieldSetId = xprofile_set_field_data ( $key, $user_id, $val );
-	}
+	}	
 }
 function mailchimpBpIntagration_activation_subject($subject, $user, $user_email, $key, $meta) {
 	return __ ( 'Custom activation subject', 'cfef' );

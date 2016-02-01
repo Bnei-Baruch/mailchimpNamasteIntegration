@@ -113,7 +113,7 @@ class RregistrationFormShortcodeClass {
 		}
 		
 		$fieldListWP ['user_login'] = $fieldListWP ['user_email'];
-		$fieldListWP ['display_name'] = empty ( $fieldListWP ['first_name'] ) ? $fieldListWP ['user_login'] : $fieldListWP ['first_name'];
+		//$fieldListWP ['display_name'] = empty ( $fieldListWP ['first_name'] ) ? $fieldListWP ['user_login'] : $fieldListWP ['first_name'];
 		
 		if (get_option ( 'users_can_register' )) {
 			
@@ -286,7 +286,13 @@ class RregistrationFormShortcodeClass {
 				continue;
 			}
 			// check is fields are empty or has default value
-			if (empty ( $val ['val'] ) || strpos ( $val ['val'], $val ['translate'] ) !== false || ($key == 'display_name' && $val ['val'] == $userData->user_nicename) || ($key == 'display_name' && $val ['val'] == $userData->user_email)) {
+			if (
+					empty ( $val ['val'] ) || 
+					strpos ( $val ['val'], $val ['translate'] ) !== false || 
+					($key == 'display_name' && $val ['val'] == $userData->user_nicename) || 
+					($key == 'display_name' && $val ['val'] == $userData->user_email) || 
+					($key == 'display_name' && strpos ( $val ['val'], '-' ))
+				) {
 				$isShowDialog = array (
 						'val' => $key,
 						'val1' => $val ['val'],
