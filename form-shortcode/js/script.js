@@ -11,14 +11,16 @@
         _loadTemplates();
     });
 
-    function _loadTemplates() {
-        if (document.referrer.indexOf('login') > 0 || document.referrer.indexOf('registration') > 0) {
+     function _loadTemplates() {
+        if (location.pathname === "/") {            
             $.post(currentPath + '/updateProfileTpl.html') .done( function(data) {
             	templates.updateProfile = Handlebars.compile(data);
                 getUpdateProfile();
             });
+        };
+        /*if (document.referrer.indexOf('login') > 0 || document.referrer.indexOf('registration') > 0) {
         }
-        templates.thankYou = Handlebars.compile('<div id="thankYou"><p>{{content}}</p></div>');        
+        templates.thankYou = Handlebars.compile('<div id="thankYou"><p>{{content}}</p></div>');        */
     }
     
     function getThankYou(data) {
