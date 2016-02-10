@@ -55,8 +55,6 @@ function UserProfile_SetDefaultFieldes($fieldListWP, $fieldListBP, $user_id = 1)
 		unset($fieldListWP["user_pass"]);
 		unset($fieldListWP["user_email"]);
 		$fieldListWP["ID"] = $user_id;
-		$msg = print_r( $fieldListWP, true);
-		rightToLogFileDavgur_PL($msg);
 		wp_update_user ( $fieldListWP );		
 	}
 
