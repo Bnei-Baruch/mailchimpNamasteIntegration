@@ -45,7 +45,9 @@
 	padding: 15px;
 }
 
-#registrationForm  .button.medium {
+#registrationForm  .button.medium, #register form input[type = "submit"]  {
+	display: block;border: 0 none;
+	cursor: pointer;
 	font: normal 300 30px/58px 'Roboto Condensed', sans-serif;
 	color: white;
 	padding: 0 40px;
