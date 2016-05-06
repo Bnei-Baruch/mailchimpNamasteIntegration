@@ -12,15 +12,6 @@ function registerForm_func($args) {
 			return '<h1>' . __ ( 'The user is logged in.', 'cfef' ) . '</h1>';
 		}
 	} elseif ($isAdmin) {
-	if (is_user_logged_in () && ! $isAdmin) {		
-		if (isset ( $args ['enrollto'] )) {
-			$enrollArgs = array (
-					course_id => $args ['enrollto'] 
-			);			
-			return NamasteLMSShortcodesController::enroll ( $enrollArgs );
-		} else
-			return '<h1>' . __ ( 'The user is logged in.', 'cfef' ) . '</h1>';
-	} elseif ($isAdmin) {
 		return '<a href="" id="registerUsersFromExel" class="button medium submit">' . __ ( 'Register', 'cfef' ) . ' From EXEL</a></form>';
 	}
 	$fieldsId = get_option ( 'mailChimpFieldList' );
