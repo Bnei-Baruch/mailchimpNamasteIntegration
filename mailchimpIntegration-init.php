@@ -38,7 +38,7 @@ add_action ( 'save_post_namaste_course', 'CreateGroupAndForumForCourse::SavePost
 
 add_action ( 'namaste_enrolled_course', function ($studentId, $courseId, $status) {
 	UpdateMailChimpParam ( $studentId );
-	CreateGroupAndForumForCourse::EnrolledCourse ( $a, $b, $c );
+	CreateGroupAndForumForCourse::EnrolledCourse ( $studentId, $courseId, $status);
 }, 10, 3 );
 
 // add_filter ( 'bp_core_signup_send_validation_email_message', 'mailchimpBpIntagration_activation_message', 10, 3 );
