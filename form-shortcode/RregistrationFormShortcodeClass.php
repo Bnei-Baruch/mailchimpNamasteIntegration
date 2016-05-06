@@ -11,9 +11,15 @@ class RregistrationFormShortcodeClass {
 		if (! empty ( $user_login ) && ! empty ( $user_password ) && trim ( $user_login ) != '' && trim ( $user_password ) != '') {
 			$credentials = array (
 					'user_login' => $user_login,
-					'user_password' => $user_password 
+					'user_password' => $user_password,
+					'remember' => $userData ['rememerme'] 
 			); // ,
 			   // 'remember' => ! empty ( $_REQUEST ['rememberme'] )
+			if (isset ( $userData ['rememberme'] )) { // if user check the remember me checkbox
+				$expiration_date = 60 * 60 * 24 * 356 + time (); // year
+				$domain = ($_SERVER ['HTTP_HOST'] != 'localhost') ? $_SERVER ['HTTP_HOST'] : false;
+				$rc = setcookie ( 'username', $userData ['user_login'], $expiration_date, "/", $domain );
+			}
 			
 			$loginResult = wp_signon ( $credentials, true );
 			// $loginResult = wp_authenticate($user_login, $user_password);
@@ -41,6 +47,27 @@ class RregistrationFormShortcodeClass {
 		
 		echo json_encode ( $return );
 		wp_die ();
+	}
+	/**
+	 * auto login by cookies
+	 * TODO: David - I'm think that need remove dependence from post id
+	 */
+	public static function autoLogin() {
+		$loginpageid = 190;
+		if (! is_user_logged_in () && is_page ( $loginpageid )) { // only attempt to auto-login if at www.site.com/auto-login/ (i.e. www.site.com/?p=190 )
+			if (isset ( $_COOKIE ['username'] )) {
+				
+				$user = get_user_by ( 'email', $_COOKIE ['username'] );
+				$user_id = $user->ID;
+				// login
+				wp_set_current_user ( $user_id, $_COOKIE ['username'] );
+				wp_set_auth_cookie ( $user_id );
+				do_action ( 'wp_login', $_COOKIE ['username'] );
+				// redirect to home page after logging in (i.e. don't show content of www.site.com/?p=1234 )
+				wp_redirect ( home_url () );
+				exit ();
+			}
+		}
 	}
 	
 	/**
@@ -86,7 +113,7 @@ class RregistrationFormShortcodeClass {
 		}
 		
 		$fieldListWP ['user_login'] = $fieldListWP ['user_email'];
-		$fieldListWP ['nick_name'] = empty ( $fieldListWP ['first_name'] ) ? $fieldListWP ['user_login'] : $fieldListWP ['first_name'];
+		//$fieldListWP ['display_name'] = empty ( $fieldListWP ['first_name'] ) ? $fieldListWP ['user_login'] : $fieldListWP ['first_name'];
 		
 		if (get_option ( 'users_can_register' )) {
 			
@@ -230,16 +257,49 @@ class RregistrationFormShortcodeClass {
 		$data = UserProfile_GetDefaultFieldes ();
 		$userData = get_user_by_email ( $data ['user_email'] ['val'] )->data;
 		foreach ( $data as $key => $val ) {
-			if($key == 'user_email')
+			if ($key == 'user_email')
 				continue;
-			if (empty ( $val ['val'] ) || strpos ( $val ['val'], $val ['translate'] ) !== false) {
+				// special functional for gender (becouse it's select and not text box)
+			if ($key == 'gender') {
+				$translate = array (
+						'gender' => $val ['translate'],
+						'male' => __ ( 'male', 'cfef' ),
+						'female' => __ ( 'female', 'cfef' ) 
+				);
+				if (! empty ( $val ['val'] )) {
+					$dataGender = array (
+							"male" => '',
+							"female" => '',
+							'translate' => $translate 
+					);
+					$dataGender [$val ['val']] = 'selected';
+					$data ["gender"] = $dataGender;
+					continue;
+				}
+				
+				$data ["gender"] ['translate'] = $translate;
+				$isShowDialog = array (
+						'val' => $key,
+						'val1' => $val ['val'],
+						'val2' => $translate 
+				);
+				continue;
+			}
+			// check is fields are empty or has default value
+			if (
+					empty ( $val ['val'] ) || 
+					strpos ( $val ['val'], $val ['translate'] ) !== false || 
+					($key == 'display_name' && $val ['val'] == $userData->user_nicename) || 
+					($key == 'display_name' && $val ['val'] == $userData->user_email) || 
+					($key == 'display_name' && strpos ( $val ['val'], '-' ))
+				) {
 				$isShowDialog = array (
 						'val' => $key,
 						'val1' => $val ['val'],
 						'val2' => $val ['translate'],
 						'strpos' => strpos ( $val ['val'], $val ['translate'] ) 
 				);
-				break;
+				continue;
 			}
 		}
 		

@@ -12,13 +12,13 @@ class MailChimpSend {
 	);
 	public $parameters = array ();
 	function __construct($metodId, $userEmail = NULL) {
-		$apikey = get_option ( 'mailChimpConstant' )['mailChimpApiKey']; 
-		$apikey = $apikey ? $apikey : 'dda61edcf4cf22b201c05de94a4ef445-us8' ;
+		$apikey = get_option ( 'mailChimpConstant' )['mailChimpApiKey'];
+		$apikey = $apikey ? $apikey : 'dda61edcf4cf22b201c05de94a4ef445-us8';
 		
 		$mchId = get_option ( 'mailChimpConstant' )['mailchimpId'];
-		$mchId = $mchId ? $mchId : '0b55fcc6dd' ;
+		$mchId = $mchId ? $mchId : '0b55fcc6dd';
 		
-		$userEmail = ($userEmail == null) ? get_userdata( get_current_user_id())->data->user_email : $userEmail;
+		$userEmail = ($userEmail == null) ? get_userdata ( get_current_user_id () )->data->user_email : $userEmail;
 		$emailObj = new StdClass ();
 		$mergeVarsObj = new StdClass ();
 		
@@ -32,6 +32,13 @@ class MailChimpSend {
 				'merge_vars' => $mergeVarsObj 
 		);
 	}
+	/**
+	 * Call mailchimp API
+	 * 
+	 * @param unknown $url        	
+	 * @param string $param        	
+	 * @return string|mixed
+	 */
 	private function _sendToMailChimp($url, $param = NULL) {
 		$curl = curl_init ( $url );
 		curl_setopt ( $curl, CURLOPT_HTTPHEADER, array (
@@ -44,28 +51,47 @@ class MailChimpSend {
 		curl_setopt ( $curl, CURLOPT_RETURNTRANSFER, 1 );
 		curl_setopt ( $curl, CURLOPT_SSL_VERIFYPEER, false );
 		$data = curl_exec ( $curl );
-	
+		return $data;
+	}
+	/**
+	 * If no mailchimp user with current user_email create him
+	 *
+	 * @param unknown $method        	
+	 * @param string $param        	
+	 * @return string|mixed
+	 */
+	private function _validateMailChimpResponse($method, $param = NULL) {
+		$url = 'https://us8.api.mailchimp.com/2.0/' . $method;
+		$data = $this->_sendToMailChimp ( $url );		
 		if (! $data) {
 			$error = curl_error ( $curl ) . '(' . curl_errno ( $curl ) . ')';
 			curl_close ( $curl );
 			return $error;
-		} else {
-			$decodedData = json_decode ( $data );
-			if ($decodedData->status !== "error")
+		} else {			
+			$decodedData = json_decode ( $data );			
+			
+			//register on "List_NotSubscribed" error  
+			if ($decodedData->status == "error" && $decodedData->code == "215") {
+				$addUserRequest = json_decode ( UpdateMailChimpParam ( $user_id ) );
+				if($addUserRequest->status != "error" )
+					$data = $this->_sendToMailChimp ( $url );
+			}
+			if ($decodedData->status == "error") {
 				do_action ( "mailchimp_send" );
-			return $decodedData;
+				return $decodedData;
+			} else {
+				do_action ( "mailchimp_send" );
+				return $decodedData;
+			}
 		}
 	}
-	public function SendToMailChimp() {
-		$urlBase = 'https://us8.api.mailchimp.com/2.0/';
-		
-		$url = ( string ) ($urlBase . $this->MChMetodEnum [$this->metodId]);
-		$data = $this->_sendToMailChimp ( $url );
+	public function SendToMailChimp() {		
+		$method = $this->MChMetodEnum [$this->metodId];
+		$data = $this->_validateMailChimpResponse ( $method );
 		return $data;
 	}
 	public function GetCurrentUserInfo() {
-		$urlBase = 'https://us8.api.mailchimp.com/2.0/';
-		$url = $urlBase . $this->MChMetodEnum ['getUserData'];
+		$method =  $this->MChMetodEnum ['getUserData'];
 		$param = array (
 				'apikey' => $this->parameters ['apikey'],
 				'id' => $this->parameters ['id'],
@@ -75,7 +101,7 @@ class MailChimpSend {
 						) 
 				) 
 		);
-		$data = $this->_sendToMailChimp ( $url, $param );
+		$data = $this->_validateMailChimpResponse ( $method, $param );
 		return $data;
 	}
 	public function GetParametrs() {

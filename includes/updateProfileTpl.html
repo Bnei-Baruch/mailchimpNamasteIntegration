@@ -26,10 +26,23 @@
 					class="text ui-widget-content ui-corner-all" />
 			</div>
 			<div class="formItem">
-				<label for="citydisplay_name">{{city.translate}}</label>
+				<label for="city">{{city.translate}}</label>
 				<input type="text"
 					name="city" value="{{city.val}}"
 					class="text ui-widget-content ui-corner-all" />
+			</div>
+			<div class="formItem">
+				<label for="age">{{age.translate}}</label>
+				<input type="number" min="16" max="100"
+					name="age" value="{{age.val}}"
+					class="ui-widget-content ui-corner-all" />
+			</div>
+			<div class="formItem gender">
+				<label for="gender">{{gender.translate.gender}}</label>
+				<select id="gender" name="gender">
+					<option value="{{gender.translate.male}}" {{gender.male.selected}}>{{gender.translate.male}}</option>
+					<option value="{{gender.translate.female}}" {{gender.female.selected}}>{{gender.translate.female}}</option>
+				</select>
 			</div>
 		</fieldset>
 	</form>

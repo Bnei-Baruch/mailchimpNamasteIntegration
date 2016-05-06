@@ -20,17 +20,5 @@ function AddCourseToMailChimp($post_ID, $post) {
 	$sendObj->parameters ['opts'] = $optsParam;
 	$sendObj->SendToMailChimp ();
 }
-function UpdateUserOnMailChimp($studentId, $courseId, $status) {
-	global $wpdb;
-	$wpCurrentUser = wp_get_current_user ();
-	if ($status == 'enrolled') {	
-		$aOldCourses = $wpdb->get_col ( $wpdb->prepare ( "SELECT course_id FROM " . NAMASTE_STUDENT_COURSES . "
-						 	WHERE user_id = %d AND status = %d", $studentId, 'enrolled' ) );
-		$sCourses = '[' . implode ( "],[", $aOldCourses ) . ']';
-		$sendObj = new MailChimpSend ( 'setUserData' );
-		$sendObj->parameters ["merge_vars"]->COURSES = $sCourses;
-		$sendObj->SendToMailChimp ();
-	}
-}
 
 ?>

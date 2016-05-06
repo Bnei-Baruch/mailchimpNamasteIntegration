@@ -14,9 +14,11 @@
 	z-index: 2;
 	background: #FFF url("./ajax-loader.gif") center center no-repeat;
 }
-#registrationForm.lr-form .form-field{
-    margin-bottom: 12px;
+
+#registrationForm.lr-form .form-field {
+	margin-bottom: 12px;
 }
+
 #registrationForm.lr-form, #loginForm .lr-form {
 	width: 100%
 }
@@ -43,25 +45,43 @@
 	padding: 15px;
 }
 
-#registrationForm  .button.medium {
-    font: normal 300 30px/58px 'Roboto Condensed', sans-serif;
-    color: white;
-    padding: 0 40px;
-    height: auto;
-    background-color: #e0922f;
+#registrationForm  .button.medium, #register form input[type = "submit"]  {
+	display: block;border: 0 none;
+	cursor: pointer;
+	font: normal 300 30px/58px 'Roboto Condensed', sans-serif;
+	color: white;
+	padding: 0 40px;
+	height: auto;
+	background-color: #e0922f;
 }
 
 #loginForm  #rememberPass {
-    display: block;
+	display: block;
+}
+
+#loginForm .rememberMe {
+	float: right;
+	margin-right: 10px;
+}
+
+#loginForm .rememberMe input {
+	width: auto;
+	display: inline-block;
+}
+#loginForm .rememberMe label {
+	display: inline-block;
 }
 
 /*Dialog - redefine because theme styles */
-.ui-widget-overlay,  .ui-dialog{
+.ui-widget-overlay, .ui-dialog {
 	z-index: 1001;
 }
-#updateProfileForm form .formItem{
+
+#updateProfileForm form .formItem {
 	margin-top: 10px;
-} 
-#updateProfileForm form input.text{
-	width: 100%; display: block;
-} 
+}
+
+#updateProfileForm form input.text {
+	width: 100%;
+	display: block;
+}
