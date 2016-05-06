@@ -36,8 +36,8 @@ add_action ( 'namaste_earned_points', 'UpdateMailChimpScores' );
 
 add_action ( 'save_post_namaste_course', 'CreateGroupAndForumForCourse::SavePost', 99, 3 );
 
-add_action ( 'namaste_enrolled_course', function ($a, $b, $c) {
-	UpdateUserOnMailChimp ( $a, $b, $c );
+add_action ( 'namaste_enrolled_course', function ($studentId, $courseId, $status) {
+	UpdateMailChimpParam ( $studentId );
 	CreateGroupAndForumForCourse::EnrolledCourse ( $a, $b, $c );
 }, 10, 3 );
 
