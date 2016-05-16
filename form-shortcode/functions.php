@@ -90,25 +90,5 @@ function UserProfile_SetDefaultFieldes($fieldListWP, $fieldListBP, $user_id = 1)
 		$fieldSetId = xprofile_set_field_data ( $key, $user_id, $val );
 	}	
 }
-function mailchimpBpIntagration_activation_subject($subject, $user, $user_email, $key, $meta) {
-	return __ ( 'Custom activation subject', 'cfef' );
-}
-function mailchimpBpIntagration_activation_message($message, $user_id, $activate_url) {
-	add_filter ( 'wp_mail_content_type', 'set_bp_message_content_type' );
-	return sprintf ( __ ( 'Custom activation body', 'cfef' ), $activate_url );
-}
-function mailchimpBpIntagration_retrieve_title($message) {
-	return __ ( 'Custom retrieve title', 'cfef' );
-}
-function mailchimpBpIntagration_retrieve_message($message, $key) {
-	add_filter ( 'wp_mail_content_type', 'set_bp_message_content_type' );
-	
-	$email = filter_input ( INPUT_POST, 'user_login', FILTER_SANITIZE_STRING );
-	$user = get_user_by_email ( $email );
-	$login_url = wp_login_url ( home_url () );
-	$login_url .= '&action=rp&key=' . $key . '&login=' . $user->data->user_email;
-	$massage = sprintf ( __ ( 'Custom retrieve body', 'cfef' ), 'kabacademy.com', $user->data->user_login, $login_url );
-	include ("email_footer.php");
-	return $massage;
-}
+
 ?>

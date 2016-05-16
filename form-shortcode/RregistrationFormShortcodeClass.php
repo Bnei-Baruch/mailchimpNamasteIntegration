@@ -113,7 +113,7 @@ class RregistrationFormShortcodeClass {
 		}
 		
 		$fieldListWP ['user_login'] = $fieldListWP ['user_email'];
-		//$fieldListWP ['display_name'] = empty ( $fieldListWP ['first_name'] ) ? $fieldListWP ['user_login'] : $fieldListWP ['first_name'];
+		// $fieldListWP ['display_name'] = empty ( $fieldListWP ['first_name'] ) ? $fieldListWP ['user_login'] : $fieldListWP ['first_name'];
 		
 		if (get_option ( 'users_can_register' )) {
 			
@@ -156,10 +156,6 @@ class RregistrationFormShortcodeClass {
 				// Success
 				$return ['result'] = true;
 				$return ['userId'] = $registerResult;
-				
-				if (is_numeric ( $fieldsData ['enrollToCourse'] ))
-					self::_enrollToCourse ( $fieldsData ['enrollToCourse'], $registerResult );
-				
 				$return ['message'] = array (
 						'title' => __ ( 'Registration, check you mail. Title', 'qode' ),
 						'content' => __ ( 'Registration, check you mail. Content', 'qode' ) 
@@ -185,15 +181,6 @@ class RregistrationFormShortcodeClass {
 			wp_die ();
 		}
 	}
-	private static function _enrollToCourse($courseId, $userId) {
-		$_course = new NamasteLMSCourseModel ();
-		// enroll in course
-		$course = $_course->select ( $courseId );
-		$enroll_mode = get_post_meta ( $course->ID, 'namaste_enroll_mode', true );
-		
-		// if already enrolled, just skip this altogether
-		$_course->enroll ( $userId, $course->ID, 'enrolled' );
-	}
 	
 	// Reads ajax login creds via POSt, calls the login script and interprets the result
 	public static function remember() {
@@ -217,40 +204,6 @@ class RregistrationFormShortcodeClass {
 		$return ['action'] = 'remember';
 		// Return the result array with errors etc.
 		return $return;
-	}
-	public static function fromExelRregistration() {
-		$row = 0;
-		$arrOfIndex = array (
-				'first_name' => - 1,
-				'last_name' => - 1,
-				'user_email' => - 1,
-				'country' => - 1,
-				'city' => - 1 
-		);
-		if (($handle = fopen ( MAILCHIMPINT_DIR . "/users.csv", "r" )) !== FALSE) {
-			while ( ($data = fgetcsv ( $handle, 1000, "," )) !== FALSE ) {
-				if ($row == 0) {
-					$maxI = count ( $data );
-					for($cI = 0; $cI < $maxI; $cI ++) {
-						$arrOfIndex [$data [$cI]] = $cI;
-					}
-				} else {
-					$arrOfData = array (
-							'last_name' => ' ',
-							'display_name' => ' ',
-							'city' => ' ' 
-					);
-					foreach ( $arrOfIndex as $key => $c ) {
-						$arrOfData [$key] = $data [$c];
-					}
-					// id of course for enroll
-					$arrOfData ['enrollToCourse'] = 1957;
-					self::register ( $arrOfData );
-				}
-				$row ++;
-			}
-			fclose ( $handle );
-		}
 	}
 	public static function getUpdateProfile() {
 		$isShowDialog = false;
@@ -286,13 +239,7 @@ class RregistrationFormShortcodeClass {
 				continue;
 			}
 			// check is fields are empty or has default value
-			if (
-					empty ( $val ['val'] ) || 
-					strpos ( $val ['val'], $val ['translate'] ) !== false || 
-					($key == 'display_name' && $val ['val'] == $userData->user_nicename) || 
-					($key == 'display_name' && $val ['val'] == $userData->user_email) || 
-					($key == 'display_name' && strpos ( $val ['val'], '-' ))
-				) {
+			if (empty ( $val ['val'] ) || strpos ( $val ['val'], $val ['translate'] ) !== false || ($key == 'display_name' && $val ['val'] == $userData->user_nicename) || ($key == 'display_name' && $val ['val'] == $userData->user_email) || ($key == 'display_name' && strpos ( $val ['val'], '-' ))) {
 				$isShowDialog = array (
 						'val' => $key,
 						'val1' => $val ['val'],

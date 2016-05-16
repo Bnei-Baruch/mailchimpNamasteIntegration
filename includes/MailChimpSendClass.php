@@ -72,7 +72,7 @@ class MailChimpSend {
 			
 			//register on "List_NotSubscribed" error  
 			if ($decodedData->status == "error" && $decodedData->code == "215") {
-				$addUserRequest = json_decode ( UpdateMailChimpParam ( $user_id ) );
+				$addUserRequest = json_decode ( MailChimpActions::updateParams ( $user_id ) );
 				if($addUserRequest->status != "error" )
 					$data = $this->_sendToMailChimp ( $url );
 			}
