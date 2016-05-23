@@ -62,11 +62,31 @@ class MailchimpIntegrationUtilities {
 					}
 					// id of course for enroll
 					$arrOfData ['enrollToCourse'] = 1957;
-					RregistrationFormShortcodeClass::register ( $arrOfData );
+					RregistrationFormShortcode::register ( $arrOfData );
 				}
 				$row ++;
 			}
 			fclose ( $handle );
+		}
+	}
+	public static function addToMailChimpByCourse($courseId) {
+		global $wpdb;
+		// just for davgur.ru@gmail.com
+		if (get_current_user_id () != 30) {
+			return;
+		}
+		$userIdList = $wpdb->get_results ( $wpdb->prepare ( "SELECT user_id FROM `wp_namaste_student_courses` WHERE course_id=%d", $courseId ) );
+		self::addToMailChimpByUsers ( $userIdList, 0 );
+	}
+	public static function addToMailChimpByUsers($userIdList, $index) {
+		if (count ( $userIdList ) > $index) {
+			$request = UpdateMailChimpScores ( $userIdList [$index]->user_id );
+			
+			$msg = "addUserFromCourseToMailChimp";
+			$msg .= print_r ( $request, true );
+			self::rightToLogFileDavgur ( $msg );
+			
+			self::addToMailChimpByUsers ( $userIdList, ++ $index );
 		}
 	}
 }
