@@ -4,7 +4,7 @@ define ( 'REGFORM_DIR_URL', plugin_dir_url ( __FILE__ ) );
 
 require_once REGFORM_DIR . '/functions.php';
 require_once REGFORM_DIR . '/renderHtml.php';
-require_once REGFORM_DIR . '/RregistrationFormShortcodeClass.php';
+require_once REGFORM_DIR . '/RregistrationFormShortcode.php';
 
 wp_enqueue_script ( 'handlebars', REGFORM_DIR_URL . '/js/handlebars.js' );
 wp_enqueue_script ( 'regFormJs', REGFORM_DIR_URL . '/js/script.js', array (
@@ -18,19 +18,19 @@ wp_enqueue_style ( 'loginAndRegisterForm', REGFORM_DIR_URL . '/style.css' );
 add_action ( "init", "regForm_init" );
 
 if (defined ( 'DOING_AJAX' ) && DOING_AJAX) {
-	add_action ( 'wp_ajax_nopriv_registerRregistrationFormShortcode', 'RregistrationFormShortcodeClass::register', 30 );
-	add_action ( 'wp_ajax_nopriv_loginRregistrationFormShortcode', 'RregistrationFormShortcodeClass::login', 30 );
-	add_action ( 'wp_ajax_getUpdateProfileRregistrationFormShortcode', 'RregistrationFormShortcodeClass::getUpdateProfile' );
-	add_action ( 'wp_ajax_setUpdateProfileRregistrationFormShortcode', 'RregistrationFormShortcodeClass::setUpdateProfile' );
-	add_action('wp', 'RregistrationFormShortcodeClass::autoLogin');
+	add_action ( 'wp_ajax_nopriv_registerRregistrationFormShortcode', 'RregistrationFormShortcode::register', 30 );
+	add_action ( 'wp_ajax_nopriv_loginRregistrationFormShortcode', 'RregistrationFormShortcode::login', 30 );
+	add_action ( 'wp_ajax_getUpdateProfileRregistrationFormShortcode', 'RregistrationFormShortcode::getUpdateProfile' );
+	add_action ( 'wp_ajax_setUpdateProfileRregistrationFormShortcode', 'RregistrationFormShortcode::setUpdateProfile' );
+	add_action('wp', 'RregistrationFormShortcode::autoLogin');
 }
-// add_action ( 'wp_ajax_nopriv_rememberRregistrationFormShortcode', 'RregistrationFormShortcodeClass::remember', 30 );
+// add_action ( 'wp_ajax_nopriv_rememberRregistrationFormShortcode', 'RregistrationFormShortcode::remember', 30 );
 
-add_action ( 'wp_ajax_fromExelRregistrationFormShortcode', 'RregistrationFormShortcodeClass::fromExelRregistration', 30 );
+add_action ( 'wp_ajax_fromExelRregistrationFormShortcode', 'RregistrationFormShortcode::fromExelRregistration', 30 );
 function regForm_init() {
 	add_shortcode ( 'registerForm', 'registerForm_func' );
 	add_shortcode ( 'loginForm', 'loginForm_func' );
 }
 
-add_action('wp', 'RregistrationFormShortcodeClass::autoLogin');
+add_action('wp', 'RregistrationFormShortcode::autoLogin');
 ?>

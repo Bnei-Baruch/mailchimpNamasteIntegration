@@ -22,20 +22,23 @@ class MailChimpActions {
 		$sendObj->SendToMailChimp ();
 	}
 	public static function updateScores($userId = NULL, $lastScores = 0) {
+		global $wpdb;
 		$userId = ($userId == NULL) ? get_current_user_id () : $userId;
 		
 		$scores = get_user_meta ( $userId, 'namaste_points', true );
-		
-		$sendObj = new MailChimpSend ( 'setUserData' );
+		$aCourseList = $wpdb->get_col ( $wpdb->prepare ( "SELECT course_id FROM " . NAMASTE_STUDENT_COURSES . " WHERE user_id = %d AND status = %d", $userId, 'enrolled' ) );
+		$sendObj = new MailChimpSend ( 'setUserData', get_userdata ( $userId )->data->user_email );
 		$sendObj->parameters ['merge_vars'] = array (
+				'COURSES' => '[' . implode ( "],[", $aCourseList ) . ']',
 				'SCORES' => $scores 
 		);
 		$request = $sendObj->SendToMailChimp ();
+		return $request;
 	}
 	public static function updateParams($userId = NULL) {
 		global $wpdb;
 		$userId = ($userId == NULL) ? get_current_user_id () : $userId;
-		$fieldList = UserProfile_GetDefaultFieldes ( $userId );
+		$fieldList = self::getUserFieldList ( $userId );
 		$aCourseList = $wpdb->get_col ( $wpdb->prepare ( "SELECT course_id FROM " . NAMASTE_STUDENT_COURSES . " WHERE user_id = %d AND status = %d", $userId, 'enrolled' ) );
 		$scores = get_user_meta ( $userId, 'namaste_points', true );
 		
@@ -46,7 +49,7 @@ class MailChimpActions {
 				'COUNTRY' => $fieldList ['country'] ["val"],
 				'AGE' => $fieldList ['age'] ["val"],
 				'GENDER' => $fieldList ['gender'] ["val"],
-				'COURSES' => implode ( ",", $aCourseList ),
+				'COURSES' => '[' . implode ( "],[", $aCourseList ) . ']',
 				'SCORES' => $scores 
 		);
 		
@@ -98,6 +101,50 @@ class MailChimpActions {
 		 * ));
 		 * update_user_meta(get_current_user_id(), 'updated_from_bp', '1');
 		 */
+	}
+	public static function getUserFieldList($user_id = 0) {
+		$user_id = $user_id == 0 ? get_current_user_id () : $user_id;
+		$fieldList = array (
+				'first_name' => array (
+						'val' => '',
+						'type' => 'wp',
+						'translate' => __ ( 'Your First Name', 'cfef' ) 
+				),
+				'last_name' => array (
+						'val' => '',
+						'type' => 'wp',
+						'translate' => __ ( 'Last Name', 'cfef' ) 
+				),
+				'display_name' => array (
+						'val' => '',
+						'type' => 'wp',
+						'translate' => __ ( 'Display Name', 'cfef' ) 
+				),
+				'user_email' => array (
+						'val' => '',
+						'type' => 'wp',
+						'translate' => __ ( 'Email', 'cfef' ) 
+				) 
+		);
+		
+		foreach ( get_option ( 'mailChimpFieldList' ) as $key => $val ) {
+			$fieldVal = $user_id == - 1 ? "" : xprofile_get_field_data ( $val, $user_id );
+			$fieldList [$val] = array (
+					'val' => $fieldVal,
+					'type' => 'bp',
+					'translate' => __ ( $val, 'cfef' ) 
+			);
+		}
+		
+		if ($user_id == - 1)
+			return $fieldList;
+		$currentUser = get_user_by ( "id", $user_id );
+		$fieldList ['last_name'] ['val'] = get_userdata ( $user_id )->last_name;
+		$fieldList ['first_name'] ['val'] = get_userdata ( $user_id )->first_name;
+		$fieldList ['display_name'] ['val'] = $currentUser->data->display_name;
+		$fieldList ['user_email'] ['val'] = $currentUser->data->user_email;
+		
+		return $fieldList;
 	}
 }
 

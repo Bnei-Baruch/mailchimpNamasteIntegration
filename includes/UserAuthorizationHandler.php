@@ -21,7 +21,7 @@ class UserAuthorizationHandler {
 		} else {
 			self::sendEmail ( $user_id, $user ['meta'] ['fieldListWP'] ['user_pass'] );
 		}
-		UserProfile_SetDefaultFieldes ( $user ['meta'] ['fieldListWP'], $user ['meta'] ['fieldListBP'], $user_id );
+		RregistrationFormShortcode::setUserFieldList ( $user ['meta'] ['fieldListWP'], $user ['meta'] ['fieldListBP'], $user_id );
 		MailChimpActions::updateParams ( $user_id );
 	}
 	private function sendEmail($user_id, $user_pass) {
