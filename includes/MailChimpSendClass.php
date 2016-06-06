@@ -18,7 +18,7 @@ class MailChimpSend {
 		$mchId = get_option ( 'mailChimpConstant' )['mailchimpId'];
 		$mchId = $mchId ? $mchId : '0b55fcc6dd';
 		
-		$userEmail = ($userEmail == null) ? get_userdata ( get_current_user_id () )->data->user_email : $userEmail;
+		$userEmail = ($userEmail == NULL) ? get_userdata ( get_current_user_id () )->data->user_email : $userEmail;
 		$emailObj = new StdClass ();
 		$mergeVarsObj = new StdClass ();
 		
@@ -50,7 +50,7 @@ class MailChimpSend {
 		curl_setopt ( $curl, CURLOPT_POSTFIELDS, json_encode ( $param ) );
 		curl_setopt ( $curl, CURLOPT_RETURNTRANSFER, 1 );
 		curl_setopt ( $curl, CURLOPT_SSL_VERIFYPEER, false );
-		$data = curl_exec ( $curl );
+		$data = curl_exec ( $curl );	
 		return $data;
 	}
 	/**
@@ -61,8 +61,26 @@ class MailChimpSend {
 	 * @return string|mixed
 	 */
 	private function _validateMailChimpResponse($method, $param = NULL) {
+		
 		$url = 'https://us8.api.mailchimp.com/2.0/' . $method;
-		$data = $this->_sendToMailChimp ( $url );		
+		$data = $this->_sendToMailChimp ( $url );	
+
+
+
+
+
+		try {
+			$msg = "data";
+			$msg .= print_r($data, true);
+			MailchimpIntegrationUtilities::rightToLogFileDavgur($msg);
+		} catch (Exception $e) {
+			$msg = print_r($e, true);
+		}
+
+		
+		
+		
+		
 		if (! $data) {
 			$error = curl_error ( $curl ) . '(' . curl_errno ( $curl ) . ')';
 			curl_close ( $curl );
@@ -71,10 +89,18 @@ class MailChimpSend {
 			$decodedData = json_decode ( $data );			
 			
 			//register on "List_NotSubscribed" error  
-			if ($decodedData->status == "error" && $decodedData->code == "215") {
-				$addUserRequest = json_decode ( MailChimpActions::updateParams ( $user_id ) );
-				if($addUserRequest->status != "error" )
-					$data = $this->_sendToMailChimp ( $url );
+			if ($decodedData->status == "error") {
+				switch ($decodedData->code){
+					case "233":
+					case "232":
+					case "215":
+						_validateMailChimpResponse($this->MChMetodEnum["listSubscribe"]);
+						break;						 
+					
+				}
+				//$addUserRequest = json_decode ( MailChimpActions::updateParams ( $user_id ) );
+				/* if($addUserRequest->status != "error" )
+					$data = $this->_sendToMailChimp ( $url ); */
 			}
 			if ($decodedData->status == "error") {
 				do_action ( "mailchimp_send" );

@@ -8,8 +8,9 @@ load_plugin_textdomain ( 'cfef', false, dirname ( plugin_basename ( __FILE__ ) )
 
 define ( 'MAILCHIMPINT_DIR', untrailingslashit ( dirname ( __FILE__ ) ) );
 define ( 'MAILCHIMPINT_DIR_URL', untrailingslashit ( plugins_url ( '', __FILE__ ) ) );
-require_once MAILCHIMPINT_DIR . '/includes/mailchimp-api.php';
-require_once MAILCHIMPINT_DIR . '/includes/section-actions.php';
+require_once MAILCHIMPINT_DIR . '/includes/MailchimpIntegrationUtilities.php';
+
+require_once MAILCHIMPINT_DIR . '/includes/MailChimpSendClass.php';
 require_once MAILCHIMPINT_DIR . '/includes/MailChimpActions.php';
 require_once MAILCHIMPINT_DIR . '/includes/CreateGroupAndForumForCourse.php';
 require_once MAILCHIMPINT_DIR . '/includes/UserAuthorizationHandler.php';
@@ -21,7 +22,7 @@ if (is_admin ()) {
 	add_action ( 'admin_menu', 'mailChimpInt_init' );
 }
 
-/* Called actions */
+//Called actions 
 add_action ( 'mailchimp_send', 'synchronization_wp_user' );
 
 add_action ( 'profile_update', 'MailChimpActions::updateParams' );
@@ -39,11 +40,11 @@ add_action ( 'namaste_enrolled_course', function ($studentId, $courseId, $status
 
 // add_action ( 'updated_namaste_unenroll_meta', 'CreateGroupAndForumForCourse::UnsubscribeCourse');
 
-UserAuthorizationHandler::initActions ();
+ UserAuthorizationHandler::initActions ();
 function mailChimpInt_init() {
 	// create custom plugin settings menu
 	register_mysettings ();
 	do_action ( 'mailChimpInt_init' );
-}
+} 
 
 ?>

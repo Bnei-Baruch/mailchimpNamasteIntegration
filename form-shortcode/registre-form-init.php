@@ -2,7 +2,6 @@
 define ( 'REGFORM_DIR', plugin_dir_path ( __FILE__ ) );
 define ( 'REGFORM_DIR_URL', plugin_dir_url ( __FILE__ ) );
 
-require_once REGFORM_DIR . '/functions.php';
 require_once REGFORM_DIR . '/renderHtml.php';
 require_once REGFORM_DIR . '/RregistrationFormShortcode.php';
 

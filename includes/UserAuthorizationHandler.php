@@ -3,12 +3,14 @@
  * Add some functonal after authorization
  */
 class UserAuthorizationHandler {
-	public static function initActions() {
+	public static function initActions() {		
+
+
 		add_action ( 'bp_core_activated_user', 'UserAuthorizationHandler::addToMailChimp', 100, 3 );
 		
 		// actions for change letters
-		
-		// add_filter ( 'bp_core_signup_send_validation_email_message', 'UserAuthorizationHandler::activationMessage', 10, 3 );
+
+		//add_filter ( 'bp_core_signup_send_validation_email_message', 'UserAuthorizationHandler::activationMessage', 10, 3 );
 		add_filter ( 'bp_core_signup_send_validation_email_subject', 'UserAuthorizationHandler::activationSubject', 10, 5 );
 		add_filter ( 'retrieve_password_message', 'UserAuthorizationHandler::retrieveMessage', 10, 2 );
 		add_filter ( 'retrieve_password_title', 'UserAuthorizationHandler::retrieveTitle', 10, 1 );
@@ -34,7 +36,7 @@ class UserAuthorizationHandler {
 		$message .= 'Чтобы установить новый пароль, перейдите по ссылке: ' . wp_login_url ( home_url () . '/login/' ) . '&action=lostpassword';
 		$message .= '<br /><br />';
 		
-		self::send ( $msg, $subject, $user->user_email );
+		self::send ( $message, $subject, $user->user_email );
 	}
 	private function sendEmailWithEnroll($user_id, $user_pass, $courseId) {
 		$user = get_user_by ( 'id', $user_id );
