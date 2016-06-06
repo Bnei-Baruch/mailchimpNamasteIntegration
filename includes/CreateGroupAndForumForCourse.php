@@ -1,7 +1,6 @@
 <?php
 class CreateGroupAndForumForCourse {
 	static public function SavePost($post_id, $post, $update) {
-		
 		if (wp_is_post_revision ( $post_id ) || $post->post_status != 'publish' || $post->post_type != 'namaste_course')
 			return;
 		$meta = get_post_meta ( $post_id, 'buddypress_id', true );

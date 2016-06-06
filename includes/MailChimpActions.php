@@ -22,6 +22,9 @@ class MailChimpActions {
 		$sendObj->SendToMailChimp ();
 	}
 	public static function updateScores($userId = NULL, $lastScores = 0) {
+		if(!is_user_logged_in()){
+			return;
+		}
 		global $wpdb;
 		$userId = ($userId == NULL) ? get_current_user_id () : $userId;
 		
@@ -36,12 +39,15 @@ class MailChimpActions {
 		return $request;
 	}
 	public static function updateParams($userId = NULL) {
+		if(!is_user_logged_in()){
+			return;
+		}
 		global $wpdb;
 		$userId = ($userId == NULL) ? get_current_user_id () : $userId;
 		$fieldList = self::getUserFieldList ( $userId );
 		$aCourseList = $wpdb->get_col ( $wpdb->prepare ( "SELECT course_id FROM " . NAMASTE_STUDENT_COURSES . " WHERE user_id = %d AND status = %d", $userId, 'enrolled' ) );
 		$scores = get_user_meta ( $userId, 'namaste_points', true );
-
+		
 		$mergeVars = array (
 				'FNAME' => $fieldList ['first_name'] ["val"],
 				'LNAME' => $fieldList ['last_name'] ["val"],
@@ -71,7 +77,7 @@ class MailChimpActions {
 			$paramTemp ['email'] = $userInfo->data [0];
 		}
 		$newParamTemp = array_merge ( ( array ) $paramTemp, $defParam );
-
+		
 		$sendObj->SetParametrs ( $newParamTemp );
 		$request = $sendObj->SendToMailChimp ();
 		return $request;
@@ -147,5 +153,4 @@ class MailChimpActions {
 		return $fieldList;
 	}
 }
-
 ?>

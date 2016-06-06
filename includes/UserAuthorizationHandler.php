@@ -3,14 +3,12 @@
  * Add some functonal after authorization
  */
 class UserAuthorizationHandler {
-	public static function initActions() {		
-
-
+	public static function initActions() {
 		add_action ( 'bp_core_activated_user', 'UserAuthorizationHandler::addToMailChimp', 100, 3 );
 		
 		// actions for change letters
-
-		//add_filter ( 'bp_core_signup_send_validation_email_message', 'UserAuthorizationHandler::activationMessage', 10, 3 );
+		
+		// add_filter ( 'bp_core_signup_send_validation_email_message', 'UserAuthorizationHandler::activationMessage', 10, 3 );
 		add_filter ( 'bp_core_signup_send_validation_email_subject', 'UserAuthorizationHandler::activationSubject', 10, 5 );
 		add_filter ( 'retrieve_password_message', 'UserAuthorizationHandler::retrieveMessage', 10, 2 );
 		add_filter ( 'retrieve_password_title', 'UserAuthorizationHandler::retrieveTitle', 10, 1 );
@@ -24,7 +22,7 @@ class UserAuthorizationHandler {
 			self::sendEmail ( $user_id, $user ['meta'] ['fieldListWP'] ['user_pass'] );
 		}
 		RregistrationFormShortcode::setUserFieldList ( $user ['meta'] ['fieldListWP'], $user ['meta'] ['fieldListBP'], $user_id );
-		MailChimpActions::updateParams ( $user_id );
+		//MailChimpActions::updateParams ( $user_id );
 	}
 	private function sendEmail($user_id, $user_pass) {
 		$user = get_user_by ( 'id', $user_id );
@@ -102,10 +100,3 @@ class UserAuthorizationHandler {
 		return $massage;
 	}
 }
-
-
-
-
-
-
-
