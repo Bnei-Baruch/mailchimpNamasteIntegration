@@ -41,7 +41,7 @@ class MailChimpActions {
 		$fieldList = self::getUserFieldList ( $userId );
 		$aCourseList = $wpdb->get_col ( $wpdb->prepare ( "SELECT course_id FROM " . NAMASTE_STUDENT_COURSES . " WHERE user_id = %d AND status = %d", $userId, 'enrolled' ) );
 		$scores = get_user_meta ( $userId, 'namaste_points', true );
-
+		
 		$mergeVars = array (
 				'FNAME' => $fieldList ['first_name'] ["val"],
 				'LNAME' => $fieldList ['last_name'] ["val"],
@@ -71,7 +71,7 @@ class MailChimpActions {
 			$paramTemp ['email'] = $userInfo->data [0];
 		}
 		$newParamTemp = array_merge ( ( array ) $paramTemp, $defParam );
-
+		
 		$sendObj->SetParametrs ( $newParamTemp );
 		$request = $sendObj->SendToMailChimp ();
 		return $request;
@@ -147,5 +147,4 @@ class MailChimpActions {
 		return $fieldList;
 	}
 }
-
 ?>

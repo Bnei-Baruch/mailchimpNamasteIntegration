@@ -34,7 +34,7 @@ class MailChimpSend {
 	}
 	/**
 	 * Call mailchimp API
-	 * 
+	 *
 	 * @param unknown $url        	
 	 * @param string $param        	
 	 * @return string|mixed
@@ -50,7 +50,7 @@ class MailChimpSend {
 		curl_setopt ( $curl, CURLOPT_POSTFIELDS, json_encode ( $param ) );
 		curl_setopt ( $curl, CURLOPT_RETURNTRANSFER, 1 );
 		curl_setopt ( $curl, CURLOPT_SSL_VERIFYPEER, false );
-		$data = curl_exec ( $curl );	
+		$data = curl_exec ( $curl );
 		return $data;
 	}
 	/**
@@ -61,46 +61,38 @@ class MailChimpSend {
 	 * @return string|mixed
 	 */
 	private function _validateMailChimpResponse($method, $param = NULL) {
-		
 		$url = 'https://us8.api.mailchimp.com/2.0/' . $method;
-		$data = $this->_sendToMailChimp ( $url );	
-
-
-
-
-
+		$data = $this->_sendToMailChimp ( $url );
+		
 		try {
 			$msg = "data";
-			$msg .= print_r($data, true);
-			MailchimpIntegrationUtilities::rightToLogFileDavgur($msg);
-		} catch (Exception $e) {
-			$msg = print_r($e, true);
+			$msg .= print_r ( $data, true );
+			MailchimpIntegrationUtilities::rightToLogFileDavgur ( $msg );
+		} catch ( Exception $e ) {
+			$msg = print_r ( $e, true );
 		}
-
-		
-		
-		
 		
 		if (! $data) {
 			$error = curl_error ( $curl ) . '(' . curl_errno ( $curl ) . ')';
 			curl_close ( $curl );
 			return $error;
-		} else {			
-			$decodedData = json_decode ( $data );			
+		} else {
+			$decodedData = json_decode ( $data );
 			
-			//register on "List_NotSubscribed" error  
+			// register on "List_NotSubscribed" error
 			if ($decodedData->status == "error") {
-				switch ($decodedData->code){
-					case "233":
-					case "232":
-					case "215":
-						_validateMailChimpResponse($this->MChMetodEnum["listSubscribe"]);
-						break;						 
-					
+				switch ($decodedData->code) {
+					case "233" :
+					case "232" :
+					case "215" :
+						_validateMailChimpResponse ( $this->MChMetodEnum ["listSubscribe"] );
+						break;
 				}
-				//$addUserRequest = json_decode ( MailChimpActions::updateParams ( $user_id ) );
-				/* if($addUserRequest->status != "error" )
-					$data = $this->_sendToMailChimp ( $url ); */
+				// $addUserRequest = json_decode ( MailChimpActions::updateParams ( $user_id ) );
+				/*
+				 * if($addUserRequest->status != "error" )
+				 * $data = $this->_sendToMailChimp ( $url );
+				 */
 			}
 			if ($decodedData->status == "error") {
 				do_action ( "mailchimp_send" );
@@ -111,13 +103,13 @@ class MailChimpSend {
 			}
 		}
 	}
-	public function SendToMailChimp() {		
+	public function SendToMailChimp() {
 		$method = $this->MChMetodEnum [$this->metodId];
 		$data = $this->_validateMailChimpResponse ( $method );
 		return $data;
 	}
 	public function GetCurrentUserInfo() {
-		$method =  $this->MChMetodEnum ['getUserData'];
+		$method = $this->MChMetodEnum ['getUserData'];
 		$param = array (
 				'apikey' => $this->parameters ['apikey'],
 				'id' => $this->parameters ['id'],

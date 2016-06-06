@@ -8,7 +8,7 @@ class MailchimpIntegrationUtilities {
 		$bp = buddypress ();
 		$group = $wpdb->get_row ( $wpdb->prepare ( "SELECT g.* FROM {$bp->groups->table_name} g WHERE g.id = %d", $groupId ) );
 		$userIdList = $wpdb->get_results ( $wpdb->prepare ( "SELECT user_id FROM `wp_namaste_student_courses` WHERE course_id=%d", $courseId ) );
-			
+		
 		foreach ( $userIdList as $userId ) {
 			groups_invite_user ( array (
 					'user_id' => $userId->user_id,
@@ -22,17 +22,17 @@ class MailchimpIntegrationUtilities {
 			bbp_add_user_forum_subscription ( $userId, $forums [0] );
 		}
 	}
-
-/**
-	$msg = "test";
-	try {
-		$msg .= print_r(print, true);
-	} catch (Exception $e) {
-		$msg .= print_r($e, true);
-	}
-	MailchimpIntegrationUtilities::rightToLogFileDavgur($msg);
-*/
-
+	
+	/**
+	 * $msg = "test";
+	 * try {
+	 * $msg .
+	 * = print_r(print, true);
+	 * } catch (Exception $e) {
+	 * $msg .= print_r($e, true);
+	 * }
+	 * MailchimpIntegrationUtilities::rightToLogFileDavgur($msg);
+	 */
 	public static function rightToLogFileDavgur($logText) {
 		$msg = $logText;
 		$path = MAILCHIMPINT_DIR . '/DavgurLog.txt';
@@ -85,10 +85,9 @@ class MailchimpIntegrationUtilities {
 	}
 	public static function addToMailChimpByUsers($userIdList, $index) {
 		if (count ( $userIdList ) > $index) {
-			$request = UpdateMailChimpScores ( $userIdList [$index]->user_id );			
+			$request = UpdateMailChimpScores ( $userIdList [$index]->user_id );
 			self::addToMailChimpByUsers ( $userIdList, ++ $index );
 		}
 	}
 }
-
 ?>
