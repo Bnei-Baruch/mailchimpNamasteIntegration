@@ -22,7 +22,7 @@ class UserAuthorizationHandler {
 			self::sendEmail ( $user_id, $user ['meta'] ['fieldListWP'] ['user_pass'] );
 		}
 		RregistrationFormShortcode::setUserFieldList ( $user ['meta'] ['fieldListWP'], $user ['meta'] ['fieldListBP'], $user_id );
-		//MailChimpActions::updateParams ( $user_id );
+		// MailChimpActions::updateParams ( $user_id );
 	}
 	private function sendEmail($user_id, $user_pass) {
 		$user = get_user_by ( 'id', $user_id );
@@ -33,7 +33,8 @@ class UserAuthorizationHandler {
 		$message .= __ ( 'Password: ' ) . $user_pass . '<br /><br />';
 		$message .= 'Чтобы установить новый пароль, перейдите по ссылке: ' . wp_login_url ( home_url () . '/login/' ) . '&action=lostpassword';
 		$message .= '<br /><br />';
-		
+		include_once 'email.php';
+		$message .= $msgBody;
 		self::send ( $message, $subject, $user->user_email );
 	}
 	private function sendEmailWithEnroll($user_id, $user_pass, $courseId) {
