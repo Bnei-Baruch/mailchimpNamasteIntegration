@@ -28,13 +28,7 @@ class UserAuthorizationHandler {
 		$user = get_user_by ( 'id', $user_id );
 		
 		$subject = 'Логин и пароль для сайта kabacademy.com.';
-		$message = "Вы успешно зарегистрированы на сайте Международной академии каббалы.<br /><br />";
-		$message .= sprintf ( __ ( 'Username: %s' ), $user->user_login ) . "<br /><br />";
-		$message .= __ ( 'Password: ' ) . $user_pass . '<br /><br />';
-		$message .= 'Чтобы установить новый пароль, перейдите по ссылке: ' . wp_login_url ( home_url () . '/login/' ) . '&action=lostpassword';
-		$message .= '<br /><br />';
-		include_once 'email.php';
-		$message .= $msgBody;
+		include_once 'userAutorisationEmail.php';
 		self::send ( $message, $subject, $user->user_email );
 	}
 	private function sendEmailWithEnroll($user_id, $user_pass, $courseId) {

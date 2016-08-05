@@ -1,5 +1,6 @@
 <?php
-$msgBody = '<div style="font: 14px/20px Arial; padding: 15px 20px;" >
+
+$message = '<div style="font: 14px/20px Arial; padding: 15px 20px;max-width: 960px; margin: 0 auto;" >
                 <div style="text-align: center">
                     <a href="kabacademy.com">
                         <img
@@ -10,10 +11,11 @@ $msgBody = '<div style="font: 14px/20px Arial; padding: 15px 20px;" >
                         <p>' . $user->display_name . ', здравствуйте!</p>
                         <p>Вы зарегистрированы на сайте Международной академии каббалы,
 				крупнейшем в мире учебно-образовательном, бесплатном и
-				неограниченном источнике достоверной информации о науке каббала. Но
-				по какой-то причине вы все еще не записались ни на один из наших
-				курсов, а значит не получаете этих бесценных знаний!</p>
-                        <p>Позвольте рассказать вам о том, как пользоваться сайтом
+				неограниченном источнике достоверной информации о науке каббала.</p>
+
+                        <p>'.sprintf ( __ ( 'Username: %s' ), $user->user_login ).'<br />'.__ ( 'Password' ) .': '. $user_pass . '</p>
+                        <p>Чтобы установить новый пароль, перейдите по ссылке: ' . wp_login_url ( home_url () . '/login/' ) . '&action=lostpassword</p>
+                        <p><br><br>Позвольте рассказать вам о том, как пользоваться сайтом
 				академии, чтобы вы могли использовать все возможности предлагаемого
 				обучения.</p>
                         <p>На сайте представлены различные курсы на выбор:</p>
@@ -23,28 +25,18 @@ $msgBody = '<div style="font: 14px/20px Arial; padding: 15px 20px;" >
                         <img
 				src="https://lh6.googleusercontent.com/3qa89pVx0stm8LMi1k3NGDbG4uRVvpx2OQ81tBCH3vTuU8irsOw94HMtb9_Rkz8U0HX7pFh29ao4MyILkRM8b3NE1XfkCJToQLlAdm4HxhuioYw3Q8zjOR1pzYyLkm6i4krLKFnK"
 				style="	float: left;margin: 15px 10px 10px 0;border: 0 none;outline: none;width: 160px;" alt="" />
-                        <p>
-				Онлайн-курс 
-                            <span style="color: #00adef;font: bold 16px Arial;">“Основы каббалы. Зима
-					2016”</span> - новый опыт в вашей жизни от самой природы. На курсе вы
+                        <p>Онлайн-курс 
+                            <span style="color: #00adef;font: bold 16px Arial;">“Основы каббалы.”</span> - новый опыт в вашей жизни от самой природы. На курсе вы
 				узнаете о строении мироздания, о силах, управляющих нашей природой,
-				нами и всем окружающим.
-			
-                        </p>
-                        <p>
-				Дипломированные преподаватели в удобное время проведут вас по
+				нами и всем окружающим.</p>
+                        <p>Аттестованные преподаватели в удобное время проведут вас по
 				основам каббалистической мудрости. При желании, в процессе вы
 				сможете перейти с онлайн обучения на 
-                            <a
-					href="http://kabacademy.com/filialyi/">очные курсы</a>.
-			
+                            <a href="http://kabacademy.com/filialyi/">очные курсы</a>.			
                         </p>
-                        <p>Регистрация на курс продлится до 23 февраля. Успейте
-				зарегистрироваться!</p>
                     </div>
                     <div style="text-align: center">
-                        <a href="http://kabacademy.com/online-course-lp/"
-				style="display: inline-block;padding: 10px 15px;font: 16px/30px Arial;border-radius: 2px;background-color: #e0922f;text-decoration: none;text-transform: uppercase;cursor: pointer;white-space: nowrap;color: #ffffff;"> 
+                        <a href="http://kabacademy.com/online-course-lp/" style="display: inline-block;padding: 10px 15px;font: 16px/30px Arial;border-radius: 2px;background-color: #e0922f;text-decoration: none;text-transform: uppercase;cursor: pointer;white-space: nowrap;color: #ffffff;"> 
 					Записаться на курс 
 			</a>
                     </div>
@@ -54,8 +46,7 @@ $msgBody = '<div style="font: 14px/20px Arial; padding: 15px 20px;" >
                         </p>
                         <ul style="list-style-position: inside;padding-left: 10px;">
                             <li>Базовое обучение — 10 недель</li>
-                            <li>Занятия 2 раза в неделю: по воскресеньям вебинар с Михаэлем
-					Лайтманом, а по четвергам - учебная лекция преподавателей академии
+                            <li>Занятия 2 раза в неделю
 				</li>
                             <li>Бесплатный доступ к оригинальным текстам</li>
                             <li>Возможность участия в онлайн-сообществе</li>
@@ -78,7 +69,7 @@ $msgBody = '<div style="font: 14px/20px Arial; padding: 15px 20px;" >
 				телевидении и в сети интернет, проводит еженедельные встречи в
 				формате вебинаров, где отвечает на вопросы зрителей в прямом эфире.</p>
                         <p>Это курс для тех, кто желает получить ответы на вопросы о
-				смысле жизни быстро, непосредственно из уст признанного мудреца.</p>
+				смысле жизни быстро, непосредственно от каббалиста.</p>
                     </div>
                     <div style="text-align: center">
                         <a href="http://kabacademy.com/course/webinar-michael-laitman/"
