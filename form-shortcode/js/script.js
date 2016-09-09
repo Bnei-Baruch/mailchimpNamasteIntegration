@@ -131,7 +131,8 @@
 
         function callback(data) {
             if (data && data.result){
-            	var _url = window.location.origin + "/thank-you/";
+                var toPage = data.to_page || "/thank-you/"
+            	var _url = window.location.origin + toPage;
             	//getThankYou(data)
             	//window.location.search = "successful=true";
             	window.location.replace(_url);            	

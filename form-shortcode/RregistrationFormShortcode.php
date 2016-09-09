@@ -90,20 +90,6 @@ class RregistrationFormShortcode {
 			$fieldsData = $userData;
 		}
 		
-		// break if two password fieldes are not equal
-		/*
-		 * if ($fieldsData ['password_confirmation'] != $fieldsData ['user_pass']) {
-		 * $return ['result'] = false;
-		 * $return ['error'] = __ ( 'Password not confirmed.', 'login' );
-		 * $return ['msg'] = $fieldsData ['user_pass'];
-		 * $return ['$pass_conf'] = $fieldsData ['password_confirmation'];
-		 * echo json_encode ( $return );
-		 * if (! $isFromExel) {
-		 * wp_die ();
-		 * }
-		 * }
-		 */
-		
 		$fieldListWP ['user_pass'] = wp_generate_password ();
 		foreach ( $fieldList as $key => $val ) {
 			if ($fieldList [$key] ['type'] == "wp")
@@ -133,6 +119,13 @@ class RregistrationFormShortcode {
 			$userByEmail = get_user_by_email ( $fieldListWP ['user_email'] );
 			
 			if ($userByEmail) {
+				if (is_numeric ( $fieldsData ['enrollToCourse'] )) {
+					$return ['result'] = true;
+					$return ['to_page'] = '/login/';
+					echo json_encode ( $return );
+					wp_die ();
+				}
+				
 				$return ['result'] = false;
 				$return ['error'] = __ ( 'Sorry, that email address is already used!' );
 				if (! $isFromExel) {
@@ -167,7 +160,6 @@ class RregistrationFormShortcode {
 						) 
 				);
 			} else {
-				// Something's wrong
 				$return ['result'] = false;
 				$return ['error'] = ($registerResult == false) ? __ ( 'An error occurred. Please try again later.' ) : $registerResult->get_error_message ();
 			}
