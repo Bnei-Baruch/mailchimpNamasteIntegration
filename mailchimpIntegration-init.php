@@ -31,8 +31,9 @@ add_action ( 'xprofile_updated_profile', 'MailChimpActions::updateParams' );
 add_action ( 'delete_user', 'MailChimpActions::unsubscribe' );
 add_action ( 'publish_namaste_course', 'MailChimpActions::addCourse', 10, 2 );
 add_action ( 'namaste_earned_points', 'MailChimpActions::updateScores' );
+add_action ( 'transition_post_status', 'CreateGroupAndForumForCourse::SavePost', 99, 3 );
 
-add_action ( 'save_post_namaste_course', 'CreateGroupAndForumForCourse::SavePost', 99, 3 );
+
 add_action ( 'namaste_enrolled_course', function ($studentId, $courseId, $status) {
 	MailChimpActions::updateParams ( $studentId );
 	CreateGroupAndForumForCourse::EnrolledCourse ( $studentId, $courseId, $status );
