@@ -1,9 +1,10 @@
 <?php
 class CreateGroupAndForumForCourse {
-	static public function SavePost($post, $prevStatus, $newStatus) {
-		if (wp_is_post_revision ( $post->ID ) || $prevStatus != 'draft' || $newStatus != 'publish' || $post->post_type != 'namaste_course')
+	static public function SavePost($post_id, $post, $update) {
+		
+		if (wp_is_post_revision ( $post_id ) || $post->post_status != 'publish' || $post->post_type != 'namaste_course')
 			return;
-		$meta = get_post_meta ( $post->ID, 'buddypress_id', true );
+		$meta = get_post_meta ( $post_id, 'buddypress_id', true );
 		
 		if (empty ( $meta )) {
 			$group_id = groups_create_group ( array (
@@ -13,7 +14,7 @@ class CreateGroupAndForumForCourse {
 					'enable_forum' => 1 
 			) );
 			
-			update_post_meta ( $post->ID, 'buddypress_id', $group_id );
+			update_post_meta ( $post_id, 'buddypress_id', $group_id );
 			
 			groups_edit_group_settings ( $group_id, 1, 'private', 'mods' );
 			
@@ -30,7 +31,7 @@ class CreateGroupAndForumForCourse {
 		}
 		
 		bbp_add_user_forum_subscription ( bbp_get_current_user_id (), $forum_id );
-		update_post_meta ( $forum_id, '_forum_course_id', $post->ID );
+		update_post_meta ( $forum_id, '_forum_course_id', $post_id );
 	}
 	static public function EnrolledCourse($student_id, $course_id, $status) {
 		global $wpdb;

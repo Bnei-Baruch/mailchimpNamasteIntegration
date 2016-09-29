@@ -1,5 +1,4 @@
 <?php
-
 $message = '<div style="font: 14px/20px Arial; padding: 15px 20px;max-width: 960px; margin: 0 auto;" >
                 <div style="text-align: center">
                     <a href="kabacademy.com">

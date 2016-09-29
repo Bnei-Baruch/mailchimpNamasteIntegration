@@ -15,7 +15,7 @@ function registerForm_func($args) {
 		return '<a href="" id="registerUsersFromExel" class="button medium submit">' . __ ( 'Register', 'cfef' ) . ' From EXEL</a></form>';
 	}
 	$fieldsId = get_option ( 'mailChimpFieldList' );
-	$fieldList = array_merge ( RregistrationFormShortcode::getUserFieldList (), $fieldsId );
+	$fieldList = array_merge ( KabCustomRegistrationHelper::getUserFieldList (), $fieldsId );
 	$fieldListNew = array ();
 	
 	foreach ( $fieldList as $key => $val ) {
