@@ -1,6 +1,6 @@
 <?php
 /*
- * Plugin Name: AAAMailChimp Integration(Davgur)
+ * Plugin Name: MailChimp Integration
  * Description:
  * License: MIT License
  */
@@ -8,104 +8,41 @@ load_plugin_textdomain ( 'cfef', false, dirname ( plugin_basename ( __FILE__ ) )
 
 define ( 'MAILCHIMPINT_DIR', untrailingslashit ( dirname ( __FILE__ ) ) );
 define ( 'MAILCHIMPINT_DIR_URL', untrailingslashit ( plugins_url ( '', __FILE__ ) ) );
-require_once MAILCHIMPINT_DIR . '/includes/mailchimp-api.php';
-require_once MAILCHIMPINT_DIR . '/includes/section-actions.php';
-require_once MAILCHIMPINT_DIR . '/includes/list-actions.php';
-require_once MAILCHIMPINT_DIR . '/includes/ajaxRequest.php';
+require_once MAILCHIMPINT_DIR . '/includes/MailchimpIntegrationUtilities.php';
+
+require_once MAILCHIMPINT_DIR . '/includes/MailChimpSendClass.php';
+require_once MAILCHIMPINT_DIR . '/includes/MailChimpActions.php';
 require_once MAILCHIMPINT_DIR . '/includes/CreateGroupAndForumForCourse.php';
+require_once MAILCHIMPINT_DIR . '/includes/UserAuthorizationHandler.php';
 require_once MAILCHIMPINT_DIR . '/form-shortcode/registre-form-init.php';
 
 if (is_admin ()) {
 	require_once MAILCHIMPINT_DIR . '/admin/admin.php';
+	require_once MAILCHIMPINT_DIR . '/admin/MailChimpIntegratorAdmin.php';
 	add_action ( 'admin_menu', 'mailChimpInt_init' );
 }
 
-/* Called actions */
+// Called actions
 add_action ( 'mailchimp_send', 'synchronization_wp_user' );
 
-add_action ( 'profile_update', 'UpdateMailChimpParam' );
-add_action ( 'xprofile_updated_profile', 'UpdateMailChimpParam' );
+add_action ( 'profile_update', 'MailChimpActions::updateParams' );
+add_action ( 'xprofile_updated_profile', 'MailChimpActions::updateParams' );
 
-add_action ( 'bp_core_activated_user', 'mailChimpInt_addToMailChimp', 100, 3 );
+add_action ( 'delete_user', 'MailChimpActions::unsubscribe' );
+add_action ( 'publish_namaste_course', 'MailChimpActions::addCourse', 10, 2 );
+add_action ( 'namaste_earned_points', 'MailChimpActions::updateScores' );
+add_action ( 'transition_post_status', 'CreateGroupAndForumForCourse::SavePost', 99, 3 );
 
-add_action ( 'delete_user', 'UnsubscribeMailChimp' );
-
-add_action ( 'publish_namaste_course', 'AddCourseToMailChimp', 10, 2 );
-
-add_action ( 'namaste_earned_points', 'UpdateMailChimpScores' );
-
-add_action ( 'save_post_namaste_course', 'CreateGroupAndForumForCourse::SavePost', 99, 3 );
 
 add_action ( 'namaste_enrolled_course', function ($studentId, $courseId, $status) {
-	UpdateMailChimpParam ( $studentId );
-	CreateGroupAndForumForCourse::EnrolledCourse ( $studentId, $courseId, $status);
+	MailChimpActions::updateParams ( $studentId );
+	CreateGroupAndForumForCourse::EnrolledCourse ( $studentId, $courseId, $status );
 }, 10, 3 );
 
-// add_filter ( 'bp_core_signup_send_validation_email_message', 'mailchimpBpIntagration_activation_message', 10, 3 );
-add_filter ( 'bp_core_signup_send_validation_email_subject', 'mailchimpBpIntagration_activation_subject', 10, 5 );
-
-add_filter ( 'retrieve_password_message', 'mailchimpBpIntagration_retrieve_message', 10, 2 );
-add_filter ( 'retrieve_password_title', 'mailchimpBpIntagration_retrieve_title', 10, 1 );
-
 // add_action ( 'updated_namaste_unenroll_meta', 'CreateGroupAndForumForCourse::UnsubscribeCourse');
-function mailChimpInt_addToMailChimp($user_id, $key, $user) {
-	if (is_numeric ( $user ['meta'] ['enrollToCourse'] )) {
-		register_users_from_exel ( $user_id, $user ['meta'] ['fieldListWP'] ['user_pass'] );
-	} else {
-		register_users_from_site ( $user_id, $user ['meta'] ['fieldListWP'] ['user_pass'] );
-	}
-	UserProfile_SetDefaultFieldes ( $user ['meta'] ['fieldListWP'], $user ['meta'] ['fieldListBP'], $user_id );
-	UpdateMailChimpParam ( $user_id );
-}
-function register_users_from_site($user_id, $user_pass) {
-	$user = get_user_by ( 'id', $user_id );
-	$subject = 'Логин и пароль для сайта kabacademy.com.';
-	$message = "Вы успешно зарегистрированы на сайте Международной академии каббалы.<br /><br />";
-	$message .= sprintf ( __ ( 'Username: %s' ), $user->user_login ) . "<br /><br />";
-	$message .= __ ( 'Password: ' ) . $user_pass . '<br /><br />';
-	$message .= 'Чтобы установить новый пароль, перейдите по ссылке: ' . wp_login_url ( home_url () . '/login/' ) . '&action=lostpassword';
-	$message .= '<br /><br />';
-	
-	$headers = array (
-			'Content-type: text/html' 
-	);
-	
-	wp_mail ( $user->user_email, stripslashes ( $subject ), $message, $headers );
-}
-function register_users_from_exel($user_id, $user_pass) {
-	$user = get_user_by ( 'id', $user_id );
-	
-	$subject = 'Логин и пароль для сайта kabacademy.com';
-	
-	$msg = 'Ваши данные для входа на сайте kabacademy.com:<br /><br />';
-	$msg .= 'Имя пользователя: ' . $user->user_email . '<br />';
-	$msg .= 'Новый пароль: ' . $user_pass . '<br /><br />';
-	$msg .= '<a href="' . get_site_url () . '/login">Авторизоваться на сайте >></a><br /><br />';
-	$msg .= 'Чтобы установить новый пароль, перейдите по ссылке: ' . wp_login_url ( home_url () . '/login/' ) . '&action=lostpassword';
-	$msg .= '<br /><br />';
-	
-	$headers = array (
-			'Content-type: text/html' 
-	);
-	wp_mail ( $user->user_email, stripslashes ( $subject ), $msg, $headers );
-}
-function rightToLogFileDavgur_PL($logText) {
-	$msg = $logText;
-	$path = MAILCHIMPINT_DIR . '/DavgurLog.txt';
-	$f = fopen ( $path, "a+" );
-	fwrite ( $f, $msg );
-	fclose ( $f );
-}
+
+UserAuthorizationHandler::initActions ();
 function mailChimpInt_init() {
-	
-	/*
-	 * $group = bp_xprofile_get_groups ( $groupParam )[0];
-	 * BP_XProfile_Field::delete_for_group($group->id);
-	 */
-	// $a = __FILE__;
-	// create new top-level menu
-	// add_options_page ( 'Integration with MailChimp dg', 'Integration with MailChimp', 'administrator', 'plugins.mailchimp-bp-integrator', 'my_plugin_options' );
-	
 	// create custom plugin settings menu
 	register_mysettings ();
 	do_action ( 'mailChimpInt_init' );
