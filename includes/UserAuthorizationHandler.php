@@ -14,13 +14,11 @@ class UserAuthorizationHandler {
 		add_filter ( 'retrieve_password_title', 'UserAuthorizationHandler::retrieveTitle', 10, 1 );
 	}
 	public static function addToMailChimp($user_id, $key, $user) {
+		$user_pass = $user ['meta'] ['fieldListWP'] ['user_pass'];
 		if (is_numeric ( $user ['meta'] ['enrollToCourse'] )) {
-			$user_pass = $user ['meta'] ['fieldListWP'] ['user_pass'];
-			$courseId = $user ['meta'] ['enrollToCourse'];
-			self::sendEmailWithEnroll ( $user_id, $user_pass, $courseId );
-		} else {
-			self::sendEmail ( $user_id, $user ['meta'] ['fieldListWP'] ['user_pass'] );
-		}
+			self::enroll ( $user_id, $user ['meta'] ['enrollToCourse']);
+		} 
+		self::sendEmail ( $user_id, $user_pass );
 		RregistrationFormShortcode::setUserFieldList ( $user ['meta'] ['fieldListWP'], $user ['meta'] ['fieldListBP'], $user_id );
 		// MailChimpActions::updateParams ( $user_id );
 	}
