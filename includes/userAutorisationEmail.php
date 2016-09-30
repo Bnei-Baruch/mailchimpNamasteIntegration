@@ -26,7 +26,7 @@ $message = '<div style="font: 14px/20px Arial; padding: 15px 20px;max-width: 960
   <h2>Курсы дистанционного обучения</h2>
   <div class="clearfix">
     <img
-      src="C:\wamp\www\ru.edu.kbb1.com\wp-content\plugins\mailchimp-bp-integrator\includes\images\osnovy.png"
+      src="' . MAILCHIMPINT_DIR_URL . '/includes/images/osnovy.png"
       style="   float: left;margin: 0 10px 10px 0;border: 0 none;outline: none;width: 160px;" alt=""/>
     <p>Онлайн-курс
       <span style="color: #00adef;font: bold 16px Arial;">“Основы каббалы.”</span> - новый опыт в вашей жизни от самой
@@ -60,7 +60,7 @@ $message = '<div style="font: 14px/20px Arial; padding: 15px 20px;max-width: 960
   </div>
   <div class="clearfix">
     <img
-      src="C:\wamp\www\ru.edu.kbb1.com\wp-content\plugins\mailchimp-bp-integrator\includes\images\webinar.png"
+      src="' . MAILCHIMPINT_DIR_URL . '/includes/images/webinar.png"
       style="   float: left;margin: 0 10px 10px 0;border: 0 none;outline: none;width: 160px;" alt=""/>
     <p>
       <span style="color: #00adef;font: bold 16px Arial;">Вебинар Михаэля Лайтмана</span> (входит в
@@ -85,7 +85,7 @@ $message = '<div style="font: 14px/20px Arial; padding: 15px 20px;max-width: 960
   <div class="clearfix">
     <div style="display: inline-block;width: 49%;vertical-align: top;">
       <img
-        src="C:\wamp\www\ru.edu.kbb1.com\wp-content\plugins\mailchimp-bp-integrator\includes\images\vvodnyi.png"
+        src="' . MAILCHIMPINT_DIR_URL . '/includes/images/vvodnyi.png"
         style="float: left;margin: 15px 10px 10px 0;border: 0 none;outline: none;width: 100px;" alt=""/>
       <p>
         <a href="http://kabacademy.com/course/vvodnyj/">
@@ -100,7 +100,7 @@ $message = '<div style="font: 14px/20px Arial; padding: 15px 20px;max-width: 960
     </div>
     <div style="display: inline-block;width: 49%;vertical-align: top;">
       <img
-        src="C:\wamp\www\ru.edu.kbb1.com\wp-content\plugins\mailchimp-bp-integrator\includes\images\teoriya.png"
+        src="' . MAILCHIMPINT_DIR_URL . '/includes/images/teoriya.png"
         style="float: left;margin: 15px 10px 10px 0;border: 0 none;outline: none;width: 100px;" alt=""/>
       <p>
         <a
@@ -117,7 +117,7 @@ $message = '<div style="font: 14px/20px Arial; padding: 15px 20px;max-width: 960
     </div>
     <div style="display: inline-block;width: 49%;vertical-align: top;">
       <img
-        src="C:\wamp\www\ru.edu.kbb1.com\wp-content\plugins\mailchimp-bp-integrator\includes\images\kab_and_religion.png"
+        src="' . MAILCHIMPINT_DIR_URL . '/includes/images/kab_and_religion.png"
         style="float: left;margin: 15px 10px 10px 0;border: 0 none;outline: none;width: 100px;" alt=""/>
       <p>
         <a href="http://kabacademy.com/course/8-kabbala-i-religiya/">
@@ -133,7 +133,7 @@ $message = '<div style="font: 14px/20px Arial; padding: 15px 20px;max-width: 960
     </div>
     <div style="display: inline-block;width: 49%;vertical-align: top;">
       <img
-        src="C:\wamp\www\ru.edu.kbb1.com\wp-content\plugins\mailchimp-bp-integrator\includes\images\vospriyatie.png"
+        src="' . MAILCHIMPINT_DIR_URL . '/includes/images/vospriyatie.png"
         style="float: left;margin: 15px 10px 10px 0;border: 0 none;outline: none;width: 100px;" alt=""/>
       <p>
         <a href="http://kabacademy.com/course/3-vospriyatie-realnosti/">
