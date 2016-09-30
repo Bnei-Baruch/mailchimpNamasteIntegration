@@ -13,7 +13,7 @@
 
      function _loadTemplates() {
         if (location.pathname === "/") {            
-            $.post(currentPath + '/updateProfileTpl.html') .done( function(data) {
+            $.get(currentPath + '/updateProfileTpl.html') .done( function(data) {
             	templates.updateProfile = Handlebars.compile(data);
                 getUpdateProfile();
             });

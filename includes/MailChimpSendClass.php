@@ -18,7 +18,7 @@ class MailChimpSend {
 		$mchId = get_option ( 'mailChimpConstant' )['mailchimpId'];
 		$mchId = $mchId ? $mchId : '0b55fcc6dd';
 		
-		$userEmail = ($userEmail == null) ? get_userdata ( get_current_user_id () )->data->user_email : $userEmail;
+		$userEmail = ($userEmail == NULL) ? get_userdata ( get_current_user_id () )->data->user_email : $userEmail;
 		$emailObj = new StdClass ();
 		$mergeVarsObj = new StdClass ();
 		
@@ -34,7 +34,7 @@ class MailChimpSend {
 	}
 	/**
 	 * Call mailchimp API
-	 * 
+	 *
 	 * @param unknown $url        	
 	 * @param string $param        	
 	 * @return string|mixed
@@ -62,19 +62,28 @@ class MailChimpSend {
 	 */
 	private function _validateMailChimpResponse($method, $param = NULL) {
 		$url = 'https://us8.api.mailchimp.com/2.0/' . $method;
-		$data = $this->_sendToMailChimp ( $url );		
+		$data = $this->_sendToMailChimp ( $url );
 		if (! $data) {
 			$error = curl_error ( $curl ) . '(' . curl_errno ( $curl ) . ')';
 			curl_close ( $curl );
 			return $error;
-		} else {			
-			$decodedData = json_decode ( $data );			
+		} else {
+			$decodedData = json_decode ( $data );
 			
-			//register on "List_NotSubscribed" error  
-			if ($decodedData->status == "error" && $decodedData->code == "215") {
-				$addUserRequest = json_decode ( UpdateMailChimpParam ( $user_id ) );
-				if($addUserRequest->status != "error" )
-					$data = $this->_sendToMailChimp ( $url );
+			// register on "List_NotSubscribed" error
+			if ($decodedData->status == "error") {
+				switch ($decodedData->code) {
+					case "233" :
+					case "232" :
+					case "215" :
+						$this->_validateMailChimpResponse ( $this->MChMetodEnum ["listSubscribe"] );
+						break;
+				}
+				// $addUserRequest = json_decode ( MailChimpActions::updateParams ( $user_id ) );
+				/*
+				 * if($addUserRequest->status != "error" )
+				 * $data = $this->_sendToMailChimp ( $url );
+				 */
 			}
 			if ($decodedData->status == "error") {
 				do_action ( "mailchimp_send" );
@@ -85,13 +94,13 @@ class MailChimpSend {
 			}
 		}
 	}
-	public function SendToMailChimp() {		
+	public function SendToMailChimp() {
 		$method = $this->MChMetodEnum [$this->metodId];
 		$data = $this->_validateMailChimpResponse ( $method );
 		return $data;
 	}
 	public function GetCurrentUserInfo() {
-		$method =  $this->MChMetodEnum ['getUserData'];
+		$method = $this->MChMetodEnum ['getUserData'];
 		$param = array (
 				'apikey' => $this->parameters ['apikey'],
 				'id' => $this->parameters ['id'],
