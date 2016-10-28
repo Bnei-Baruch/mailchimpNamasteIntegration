@@ -1,5 +1,5 @@
 <?php
-require_once MAILCHIMPINT_DIR . './Registration/KabCustomRegistrationHelper.php';
+require_once MAILCHIMPINT_DIR . '/Registration/KabCustomRegistrationHelper.php';
 class KabCustomRegistration {
 	public static function login() {
 		global $wpdb;
@@ -17,7 +17,7 @@ class KabCustomRegistration {
 				self::saveCookiesOnRemembeMe ( $userData ['user_login'] );
 			}
 			
-			$return = self::parseLoginResult( wp_signon ( $credentials, true ) );
+			$return = self::parseLoginResult ( wp_signon ( $credentials, true ) );
 		} else {
 			$return = array (
 					'result' => false,

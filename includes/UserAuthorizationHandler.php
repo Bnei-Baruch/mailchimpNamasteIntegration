@@ -5,14 +5,17 @@
 class UserAuthorizationHandler {
 	public static function initActions() {
 		add_action ( 'bp_core_activated_user', 'UserAuthorizationHandler::addToMailChimp', 100, 3 );
+		add_action ( 'wsl_hook_process_login_after_hybridauth_authenticate', 'UserAuthorizationHandler::addToMailChimp', 10, 2 );
 		
-		// actions for change letters		
+		// actions for change letters
 		// add_filter ( 'bp_core_signup_send_validation_email_message', 'UserAuthorizationHandler::activationMessage', 10, 3 );
 		add_filter ( 'bp_core_signup_send_validation_email_subject', 'UserAuthorizationHandler::activationSubject', 10, 5 );
 		add_filter ( 'retrieve_password_message', 'UserAuthorizationHandler::retrieveMessage', 10, 2 );
 		add_filter ( 'retrieve_password_title', 'UserAuthorizationHandler::retrieveTitle', 10, 1 );
 	}
 	public static function addToMailChimp($user_id, $key, $user) {
+		MailchimpIntegrationUtilities::rightToLogFileDavgur ( $msg );
+		
 		$user_pass = $user ['meta'] ['fieldListWP'] ['user_pass'];
 		if (is_numeric ( $user ['meta'] ['enrollToCourse'] )) {
 			self::enroll ( $user_id, $user ['meta'] ['enrollToCourse'] );
