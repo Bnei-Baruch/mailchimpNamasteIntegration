@@ -1,4 +1,11 @@
 <?php
+if(!is_null($user_pass)){
+    $passwordMsg = '<p>'.sprintf ( __ ( 'Username: %s' ), $user_login ).'<br />'.__ ( 'Password' ) .': '. $user_pass.'</p>
+                    <p>Чтобы установить новый пароль, перейдите по ссылке: ' . wp_login_url ( home_url () . '/login/' ) . '&action=lostpassword</p>';
+} else {
+    $passwordMsg = '';
+}
+
 $message = '<div style="font: 14px/20px Arial; padding: 15px 20px;max-width: 960px; margin: 0 auto;" >
                 <div style="text-align: center">
                     <a href="kabacademy.com">
@@ -7,14 +14,12 @@ $message = '<div style="font: 14px/20px Arial; padding: 15px 20px;max-width: 960
                         </a>
                     </div>
                     <div>
-                        <p>' . $user->display_name . ', здравствуйте!</p>
+                        <p>' . $display_name . ', здравствуйте!</p>
                         <p>Вы зарегистрированы на сайте Международной академии каббалы,
 				крупнейшем в мире учебно-образовательном, бесплатном и
-				неограниченном источнике достоверной информации о науке каббала.</p>
-
-                        <p>'.sprintf ( __ ( 'Username: %s' ), $user->user_login ).'<br />'.__ ( 'Password' ) .': '. $user_pass . '</p>
-                        <p>Чтобы установить новый пароль, перейдите по ссылке: ' . wp_login_url ( home_url () . '/login/' ) . '&action=lostpassword</p>
-                        <p><br><br>Позвольте рассказать вам о том, как пользоваться сайтом
+				неограниченном источнике достоверной информации о науке каббала.</p>'
+                        .$passwordMsg.
+                        '<p><br><br>Позвольте рассказать вам о том, как пользоваться сайтом
 				академии, чтобы вы могли использовать все возможности предлагаемого
 				обучения.</p>
                         <p>На сайте представлены различные курсы на выбор:</p>
