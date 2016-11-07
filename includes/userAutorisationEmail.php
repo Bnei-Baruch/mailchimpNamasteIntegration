@@ -34,9 +34,7 @@ $message = '<div style="font: 14px/20px Arial; padding: 15px 20px;max-width: 960
       узнаете о строении мироздания, о силах, управляющих нашей природой,
       нами и всем окружающим.</p>
     <p>Аттестованные преподаватели в удобное время проведут вас по
-      основам каббалистической мудрости. При желании, в процессе вы
-      сможете перейти с онлайн обучения на
-      <a href="http://kabacademy.com/filialyi/">очные курсы</a>.
+      основам каббалистической мудрости.
     </p>
   </div>
   <div style="text-align: center">
@@ -152,17 +150,6 @@ $message = '<div style="font: 14px/20px Arial; padding: 15px 20px;max-width: 960
       <em>* Обратите внимание. Некоторые курсы доступны только после
         прохождения вводного курса.</em>
     </div>
-  </div>
-  <h2>Очное обучение в филиалах академии</h2>
-  <p>Узнайте, есть ли в вашем городе центр изучения науки каббала.
-    Самое интересное и удивительное, чем такая встреча отличается от
-    дистанционного обучения, - это знакомство с лекторами, аттестованными Международной академией каббалы, живое общение
-    с единомышленниками и
-    быстрый духовный рост.</p>
-  <div style="text-align: center">
-    <a href="http://kabacademy.com/filialyi/"
-       style="display: inline-block;padding: 10px 15px;font: 16px/30px Arial;border-radius: 2px;background-color: #e0922f;text-decoration: none;text-transform: uppercase;cursor: pointer;white-space: nowrap;color: #ffffff;">
-      Карта филиалов </a>
   </div>
   <div style="font-style: italic; margin: 50px 0 20px;">
     <ul style="list-style-position: inside;padding-left: 10px;">
