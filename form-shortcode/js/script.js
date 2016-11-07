@@ -6,7 +6,8 @@
         $("#registrationForm").on('click', '.submit', submitRegister);
         $("#loginForm").on('click', '.submit', submitLogin);
         $("#registerUsersFromExel").on('click', registerUsersFromExel);
-
+        CountryCityLoader();
+        
         // load js template and open dialog
         _loadTemplates();
     });
@@ -18,9 +19,11 @@
                 getUpdateProfile();
             });
         };
-        /*if (document.referrer.indexOf('login') > 0 || document.referrer.indexOf('registration') > 0) {
-        }
-        templates.thankYou = Handlebars.compile('<div id="thankYou"><p>{{content}}</p></div>');        */
+        /*
+		 * if (document.referrer.indexOf('login') > 0 ||
+		 * document.referrer.indexOf('registration') > 0) { } templates.thankYou =
+		 * Handlebars.compile('<div id="thankYou"><p>{{content}}</p></div>');
+		 */
     }
     
     function getThankYou(data) {
@@ -108,18 +111,16 @@
 
     }
     /*
-     * Reset password customisation
-     * $("#rememberPass").on('click', rememberPass);
-     * 
-     * function rememberPass(e){ e.preventDefault();
-     * $container = $("#loginForm"); var data = { action :
-     * 'rememberRregistrationFormShortcode', userData :
-     * $container.serialize() }; function callback(data) {
-     * if (data && data.result)
-     * $domEl.find(".errorMsg").html('Please check you
-     * mail').show(); } sendRequest(data, callback,
-     * $container); }
-     */
+	 * Reset password customisation $("#rememberPass").on('click',
+	 * rememberPass);
+	 * 
+	 * function rememberPass(e){ e.preventDefault(); $container =
+	 * $("#loginForm"); var data = { action :
+	 * 'rememberRregistrationFormShortcode', userData : $container.serialize() };
+	 * function callback(data) { if (data && data.result)
+	 * $domEl.find(".errorMsg").html('Please check you mail').show(); }
+	 * sendRequest(data, callback, $container); }
+	 */
 
     function submitRegister(event) {
         event.preventDefault();
@@ -132,8 +133,8 @@
         function callback(data) {
             if (data && data.result){
             	var _url = window.location.origin + "/thank-you/";
-            	//getThankYou(data)
-            	//window.location.search = "successful=true";
+            	// getThankYou(data)
+            	// window.location.search = "successful=true";
             	window.location.replace(_url);            	
             }
         }
@@ -163,9 +164,8 @@
         if ($domEl.validate)
             $domEl.validate();
         /*
-         * var errors = $domEl.validate();
-         * if(!errors.valid()) return;
-         */
+		 * var errors = $domEl.validate(); if(!errors.valid()) return;
+		 */
         $domEl.find(".preloader").show();
         $.ajax({
                 type: "POST",
@@ -205,4 +205,41 @@
 
         return obj;
     }
+
+    function CountryCityLoader() {
+    	var country, city, $countryEl, $cityEl;
+    	init();
+    	function init() {
+			$countryEl =  $( "#country" ).autocomplete({
+				//change: getCountries,
+				delay: 500,
+				source: ['test', 'test2','test3', 'test4']
+	    	});
+			$cityEl =  $( "#registerUsersCityByText input" ).autocomplete({
+	        	disabled: true,
+				change: getCities
+	    	});
+		}
+
+    	function getCountries(a,b,c,text) {
+    		var data = {
+    				lang: "ru",
+    				username: "kabacademy",
+    				name_startsWith: "te"
+    		};
+    		return jQuery.get( "http://api.geonames.org/countryInfoJSON", data).done(function(r) {
+    			
+    			$countryEl.autocomplete( "option", "source", r.geonames.map(function(item){
+    				return item.countryName;
+    			}));
+    			$countryEl.autocomplete( "option", "search", 'te');
+			});
+    	}
+    	
+    	function getCities(text) {
+    	}
+	}
+    
+    
+    
 }(jQuery));
