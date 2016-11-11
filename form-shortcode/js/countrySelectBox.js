@@ -4,11 +4,11 @@
     getCountries();
     $countryEl = $("#country").autocomplete({
       select: selectCountry,
-      minLength: 1
+      minLength: 1,
+      change: checkIsDisableCity
     });
 
     $cityEl = $("#registerUsersCityByText input").autocomplete({
-      disabled: true,
       search: getCities,
       minLength: 1
     });
@@ -31,7 +31,6 @@
   }
 
   function selectCountry(event, ui) {
-    $cityEl.autocomplete("option", "disabled", false);
     selectedCountry = _findCountryByName(ui.item.value);
   }
 
@@ -50,13 +49,12 @@
       country: selectedCountry.countryCode,
       type: "json"
     };
-    return jQuery.get("http://api.geonames.org/search", data).done(
-            function(r) {
-              var source = r.geonames.map(function(item) {
-                return item.name;
-              });
-              $cityEl.autocomplete("option", "source", source);
-            });
+    return jQuery.get("http://api.geonames.org/search", data).done(function(r) {
+      var source = r.geonames.map(function(item) {
+        return item.name;
+      });
+      $cityEl.autocomplete("option", "source", source);
+    });
   }
 
   function _findCountryByName(name) {
@@ -68,6 +66,14 @@
       }
     });
     return _country;
+  }
+  function checkIsDisableCity() {
+    if (!selectedCountry || selectedCountry.countryName !== $countryEl.val()) {
+      $cityEl.attr("disabled", true);
+      $cityEl.val('');
+      return;
+    }
+    $cityEl.attr("disabled", false);
   }
 
 }(jQuery));
