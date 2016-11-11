@@ -16,41 +16,41 @@ function registerForm_func($args) {
 	}
 	
 	ob_start ();
-	echo '<form class="lr-form" id="registrationForm" actoin="#" metod="post">';
-	echo '<div class="preloader"></div>';
-	echo '<div class="errorMsg" style="color: red;display: none;"></div>';
 	?>
-<div class="form-field">
-	<label for="first_name"><?php echo __ ( 'Your First Name', 'cfef' ); ?> <strong>*</strong></label>
-	<input id="first_name" type="text" name="first_name"
-		placeholder="<?php echo __ ( 'Your First Name', 'cfef' ); ?>" required>
-</div>
-<div class="form-field">
-	<label for="last_name"><?php echo __ ( 'Last Name', 'cfef' ); ?> <strong>*</strong></label>
-	<input id="last_name" type="text" name="last_name"
-		placeholder="<?php echo __ ( 'Last Name', 'cfef' ); ?>" required>
-</div>
-<div class="form-field">
-	<label for="user_email"><?php echo __ ( 'Email', 'cfef' ); ?> <strong>*</strong></label>
-	<input id="user_email" type="email" name="user_email"
-		placeholder="<?php echo __ ( 'Email', 'cfef' ); ?>" required>
-</div>
-<div class="form-field" id="registerUsersCountryByText">
-	<label for="country"><?php echo __ ( 'country', 'cfef' ); ?> <strong>*</strong></label>
-	<input id="country" name="country"
-		placeholder="<?php echo __ ( 'country', 'cfef' ); ?>" required>
-</div>
-<div class="form-field" id="registerUsersCityByText">
-	<label for="city"><?php echo __ ( 'city', 'cfef' ); ?> <strong>*</strong></label>
-	<input id="city" type="text" name="city"
-		placeholder="<?php echo __ ( 'city', 'cfef' ); ?>" required>
-</div>
-
+<form class="lr-form" id="registrationForm" actoin="#" metod="post">
+	<div class="preloader"></div>
+	<div class="errorMsg" style="color: red; display: none;"></div>
+	<div class="form-field">
+		<label for="first_name"><?php echo __ ( 'Your First Name', 'cfef' ); ?> <strong>*</strong></label>
+		<input id="first_name" type="text" name="first_name"
+			placeholder="<?php echo __ ( 'Your First Name', 'cfef' ); ?>"
+			required>
+	</div>
+	<div class="form-field">
+		<label for="last_name"><?php echo __ ( 'Last Name', 'cfef' ); ?> <strong>*</strong></label>
+		<input id="last_name" type="text" name="last_name"
+			placeholder="<?php echo __ ( 'Last Name', 'cfef' ); ?>" required>
+	</div>
+	<div class="form-field">
+		<label for="user_email"><?php echo __ ( 'Email', 'cfef' ); ?> <strong>*</strong></label>
+		<input id="user_email" type="email" name="user_email"
+			placeholder="<?php echo __ ( 'Email', 'cfef' ); ?>" required>
+	</div>
+	<div class="form-field" id="registerUsersCountryByText">
+		<label for="country"><?php echo __ ( 'country', 'cfef' ); ?> <strong>*</strong></label>
+		<input id="country" name="country"
+			placeholder="<?php echo __ ( 'country', 'cfef' ); ?>" required>
+	</div>
+	<div class="form-field" id="registerUsersCityByText">
+		<label for="city"><?php echo __ ( 'city', 'cfef' ); ?> <strong>*</strong></label>
+		<input id="city" type="text" name="city"
+			placeholder="<?php echo __ ( 'city', 'cfef' ); ?>" required>
+	</div> 
 <?php
 	if (isset ( $args ['enrollto'] )) {
 		?>
 <input type="hidden" id="enrollToCourse" name="enrollToCourse"
-	value="<?php echo  $args ["enrollto"]?>">
+		value="<?php echo  $args ["enrollto"]?>">
 <?php }?>
 <button type="submit" class="button medium submit"><?php echo  __ ( 'Register', 'cfef' ) ?></button>
 </form>
@@ -72,7 +72,7 @@ function loginForm_func($args) {
 	ob_start ();
 	?>
 
-<form class="lr-form" id="loginForm" actoin="#" metod="post">
+<form class="lr-form" id="loginForm" actoin="" metod="post">
 	<div class="preloader"></div>
 	<div class="errorMsg" style="color: red; display: none;"></div>
 
