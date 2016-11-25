@@ -23,7 +23,7 @@ class UserAuthorizationHandler {
 		}
 		$user = get_user_by ( 'id', $user_id );
 		self::sendEmail ( $user ['meta'] ['fieldListWP'] ['user_email'], $user ['meta'] ['fieldListWP'] ['display_name'], $user_pass, $user ['meta'] ['fieldListWP'] ['user_login'] );
-		RregistrationFormShortcode::setUserFieldList ( $user ['meta'] ['fieldListWP'], $user ['meta'] ['fieldListBP'], $user_id );
+		KabCustomRegistrationHelper::setUserFieldList ( $user ['meta'] ['fieldListWP'], $user ['meta'] ['fieldListBP'], $user_id );
 		// MailChimpActions::updateParams ( $user_id );
 	}
 	private function sendEmail($user_email, $user_login) {
