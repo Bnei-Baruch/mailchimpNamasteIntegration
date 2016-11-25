@@ -9,6 +9,10 @@ wp_enqueue_script ( 'handlebars', REGFORM_DIR_URL . '/js/handlebars.js' );
 wp_enqueue_script ( 'regFormJs', REGFORM_DIR_URL . '/js/script.js', array (
 		'jquery' 
 ) );
+wp_enqueue_script ( 'countrySelectBox', REGFORM_DIR_URL . '/js/countrySelectBox.js', array (
+		'jquery' 
+) );
+
 wp_enqueue_script ( 'jqueryUI' );
 wp_enqueue_script ( "jquery-ui-dialog" );
 wp_enqueue_style ( 'wp-jquery-ui-dialog' );
@@ -30,6 +34,5 @@ function regForm_init() {
 	add_shortcode ( 'registerForm', 'registerForm_func' );
 	add_shortcode ( 'loginForm', 'loginForm_func' );
 }
-
 add_action ( 'wp', 'KabCustomRegistration::autoLogin' );
 ?>
