@@ -26,11 +26,6 @@ class UserAuthorizationHandler {
 		KabCustomRegistrationHelper::setUserFieldList ( $user ['meta'] ['fieldListWP'], $user ['meta'] ['fieldListBP'], $user_id );
 		// MailChimpActions::updateParams ( $user_id );
 	}
-	private function sendEmail($user_email, $user_login) {
-		$user = get_user_by ( 'id', $user_id );
-		self::sendEmail ( $user->user_email, $user->display_name, $user_pass, $user->user_login );
-		KabCustomRegistrationHelper::setUserFieldList ( $user ['meta'] ['fieldListWP'], $user ['meta'] ['fieldListBP'], $user_id );
-	}
 	private function sendEmail( $user_email, $display_name, $user_pass, $user_login){
 		if (! is_null ( $user_pass )) {
 			$subject = 'Логин и пароль для сайта kabacademy.com.';
