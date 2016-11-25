@@ -19,11 +19,24 @@ class UserAuthorizationHandler {
 	}
 
 	public static function addToMailChimp($user_id, $key, $user) {
+<<<<<<< HEAD
 		
+=======
+>>>>>>> refs/remotes/origin/develop
 		$user_pass = $user ['meta'] ['fieldListWP'] ['user_pass'];
 		if (is_numeric ( $user ['meta'] ['enrollToCourse'] )) {
+<<<<<<< HEAD
 			self::enroll ( $user_id, $user ['meta'] ['enrollToCourse'] );
 		}
+=======
+			self::enroll ( $user_id, $user ['meta'] ['enrollToCourse']);
+		} 
+		self::sendEmail ( $user_id, $user_pass );
+		RregistrationFormShortcode::setUserFieldList ( $user ['meta'] ['fieldListWP'], $user ['meta'] ['fieldListBP'], $user_id );
+		// MailChimpActions::updateParams ( $user_id );
+	}
+	private function sendEmail($user_id, $user_pass) {
+>>>>>>> refs/remotes/origin/develop
 		$user = get_user_by ( 'id', $user_id );
 		self::sendEmail ( $user->user_email, $user->display_name, $user_pass, $user->user_login );
 		KabCustomRegistrationHelper::setUserFieldList ( $user ['meta'] ['fieldListWP'], $user ['meta'] ['fieldListBP'], $user_id );
