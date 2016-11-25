@@ -22,7 +22,7 @@ if (is_admin ()) {
 	add_action ( 'admin_menu', 'mailChimpInt_init' );
 }
 
-//Called actions 
+// Called actions
 add_action ( 'mailchimp_send', 'synchronization_wp_user' );
 
 add_action ( 'profile_update', 'MailChimpActions::updateParams' );
@@ -40,11 +40,11 @@ add_action ( 'namaste_enrolled_course', function ($studentId, $courseId, $status
 
 // add_action ( 'updated_namaste_unenroll_meta', 'CreateGroupAndForumForCourse::UnsubscribeCourse');
 
- UserAuthorizationHandler::initActions ();
+UserAuthorizationHandler::initActions ();
 function mailChimpInt_init() {
 	// create custom plugin settings menu
 	register_mysettings ();
 	do_action ( 'mailChimpInt_init' );
-} 
+}
 
 ?>

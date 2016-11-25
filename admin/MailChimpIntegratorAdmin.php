@@ -2,8 +2,6 @@
 add_action ( 'wp_ajax_getRregistrationFormFields', 'MailChimpIntegratorAdmin::load' );
 add_action ( 'wp_ajax_deleteRregistrationFormFields', 'MailChimpIntegratorAdmin::delete' );
 add_action ( 'wp_ajax_submitRregistrationFormBuilde', 'MailChimpIntegratorAdmin::update' );
-
-
 class MailChimpIntegratorAdmin {
 	public static function delete() {
 		self::canAjax ();

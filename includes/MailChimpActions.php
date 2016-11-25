@@ -22,7 +22,7 @@ class MailChimpActions {
 		$sendObj->SendToMailChimp ();
 	}
 	public static function updateScores($userId = NULL, $lastScores = 0) {
-		if(!is_user_logged_in()){
+		if (! is_user_logged_in ()) {
 			return;
 		}
 		global $wpdb;
@@ -39,7 +39,7 @@ class MailChimpActions {
 		return $request;
 	}
 	public static function updateParams($userId = NULL) {
-		if(!is_user_logged_in()){
+		if (! is_user_logged_in ()) {
 			return;
 		}
 		global $wpdb;

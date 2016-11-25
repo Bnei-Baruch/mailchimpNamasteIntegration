@@ -45,8 +45,9 @@
 	padding: 15px;
 }
 
-#registrationForm  .button.medium, #register form input[type = "submit"]  {
-	display: block;border: 0 none;
+#registrationForm  .button.medium, #register form input[type="submit"] {
+	display: block;
+	border: 0 none;
 	cursor: pointer;
 	font: normal 300 30px/58px 'Roboto Condensed', sans-serif;
 	color: white;
@@ -68,6 +69,7 @@
 	width: auto;
 	display: inline-block;
 }
+
 #loginForm .rememberMe label {
 	display: inline-block;
 }
@@ -85,19 +87,21 @@
 	width: 100%;
 	display: block;
 }
-.ui-widget.ui-widget-content{
+
+.ui-widget.ui-widget-content {
 	z-index: 1000;
 }
-.page .ui-autocomplete.ui-menu{
+
+.page .ui-autocomplete.ui-menu {
 	z-index: 1000;
 	background: white;
 	max-height: 250px;
 	max-width: 400px;
 	overflow-y: auto;
 	border: 1px solid #d8d8d8;
-
 }
-.ui-autocomplete li{
+
+.ui-autocomplete li {
 	list-style: none;
 	padding: 5px;
 	border-bottom: 1px solid #d8d8d8;
