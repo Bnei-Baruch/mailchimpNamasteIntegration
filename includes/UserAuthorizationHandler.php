@@ -16,17 +16,18 @@ class UserAuthorizationHandler {
 	public static function addToMailChimpFromHybrid($provider, $hybridauth_user_profile, $request_user_login, $request_user_email) {
 		self::sendEmail ( $request_user_email, $request_user_login, null, null );
 	}
-	public static function addToMailChimp($user_id, $key, $user) {
+public static function addToMailChimp($user_id, $key, $user) {
 		$user_pass = $user ['meta'] ['fieldListWP'] ['user_pass'];
 		if (is_numeric ( $user ['meta'] ['enrollToCourse'] )) {
 			self::enroll ( $user_id, $user ['meta'] ['enrollToCourse'] );
 		}
-		$user = get_user_by ( 'id', $user_id );
-		self::sendEmail ( $user ['meta'] ['fieldListWP'] ['user_email'], $user ['meta'] ['fieldListWP'] ['display_name'], $user_pass, $user ['meta'] ['fieldListWP'] ['user_login'] );
 		KabCustomRegistrationHelper::setUserFieldList ( $user ['meta'] ['fieldListWP'], $user ['meta'] ['fieldListBP'], $user_id );
+		
+		$user = get_user_by ( 'id', $user_id );
+		self::sendEmail ($user->user_email, $user->display_name, $user_pass, $user->user_login );
 		// MailChimpActions::updateParams ( $user_id );
 	}
-	private function sendEmail( $user_email, $display_name, $user_pass, $user_login){
+	private static function sendEmail($user_email, $display_name, $user_pass, $user_login) {
 		if (! is_null ( $user_pass )) {
 			$subject = 'Логин и пароль для сайта kabacademy.com.';
 		} else {
