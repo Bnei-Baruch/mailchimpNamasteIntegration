@@ -26,39 +26,6 @@ $message = '<div style="font: 14px/20px Arial; padding: 15px 20px;max-width: 960
       обучения.</p>
     <p>На сайте представлены различные курсы на выбор:</p>
   </div>
-  <h2>Курсы дистанционного обучения</h2>
-  <div class="clearfix">
-    <img
-      src="' . MAILCHIMPINT_DIR_URL . '/includes/images/osnovy.png"
-      style="   float: left;margin: 0 10px 10px 0;border: 0 none;outline: none;width: 160px;" alt=""/>
-    <p>Онлайн-курс
-      <span style="color: #00adef;font: bold 16px Arial;">“Основы каббалы.”</span> - новый опыт в вашей жизни от самой
-      природы. На курсе вы
-      узнаете о строении мироздания, о силах, управляющих нашей природой,
-      нами и всем окружающим.</p>
-    <p>Аттестованные преподаватели в удобное время проведут вас по
-      основам каббалистической мудрости.
-    </p>
-  </div>
-  <div style="text-align: center">
-    <a href="http://kabacademy.com/online-course-lp/"
-       style="display: inline-block;padding: 10px 15px;font: 16px/30px Arial;border-radius: 2px;background-color: #e0922f;text-decoration: none;text-transform: uppercase;cursor: pointer;white-space: nowrap;color: #ffffff;">
-      Записаться на курс
-    </a>
-  </div>
-  <div class="clearfix">
-    <p>
-      <strong>Об этом курсе:</strong>
-    </p>
-    <ul style="list-style-position: inside;padding-left: 10px;">
-      <li>Базовое обучение — 10 недель</li>
-      <li>Занятия 2 раза в неделю
-      </li>
-      <li>Бесплатный доступ к оригинальным текстам</li>
-      <li>Возможность участия в онлайн-сообществе</li>
-      <li>Архив уроков в режиме свободного скачивания</li>
-    </ul>
-  </div>
   <div class="clearfix">
     <img
       src="' . MAILCHIMPINT_DIR_URL . '/includes/images/webinar.png"
