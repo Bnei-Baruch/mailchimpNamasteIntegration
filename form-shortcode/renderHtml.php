@@ -14,6 +14,9 @@ function registerForm_func($args) {
 	} elseif ($isAdmin) {
 		return '<a href="" id="registerUsersFromExel" class="button medium submit">' . __ ( 'Register', 'cfef' ) . ' From EXEL</a></form>';
 	}
+	$fieldsId = get_option ( 'mailChimpFieldList' );
+	$fieldList = array_merge ( KabCustomRegistrationHelper::getUserFieldList (), $fieldsId );
+	$fieldListNew = array ();
 	
 	ob_start ();
 	?>
@@ -94,8 +97,8 @@ function loginForm_func($args) {
 		<input type="hidden" name="redirect_to"
 			value="<?php echo $_SERVER ['REQUEST_URI'];?>">
 	</div>
-	<button type="submit" class="button medium submit"><?php __ ( 'Log In', 'cfef' ); ?></button>
-	<a href="../wp-login.php?action=lostpassword" id="rememberPass"><?php echo __ ( 'Log In', 'cfef' ); ?></a>
+	<button type="submit" class="button medium submit"><?php echo __ ( 'Log In', 'cfef' ); ?></button>
+	<a href="../wp-login.php?action=lostpassword" id="rememberPass"><?php echo __ ( 'Reset Password', 'cfef' ); ?></a>
 </form>
 <?php
 	$data = ob_get_contents ();
