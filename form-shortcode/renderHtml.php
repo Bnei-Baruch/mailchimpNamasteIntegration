@@ -39,6 +39,7 @@ function registerForm_func($args) {
 		<input id="user_email" type="email" name="user_email"
 			placeholder="<?php echo __ ( 'Email', 'cfef' ); ?>" required>
 	</div>
+	<div class=""><i class="glyphicon glyphicon-info-sign"></i>Страну и город, просьба писать кириллицей</div>	
 	<div class="form-field" id="registerUsersCountryByText">
 		<label for="country"><?php echo __ ( 'country', 'cfef' ); ?> <strong>*</strong></label>
 		<input id="country" name="country"
