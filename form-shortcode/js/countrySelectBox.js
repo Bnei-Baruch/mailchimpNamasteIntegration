@@ -4,13 +4,13 @@
     getCountries();
     $countryEl = $("#country").autocomplete({
       select: selectCountry,
-      minLength: 1,
+      minLength: 2,
       change: checkIsDisableCity
     });
 
     $cityEl = $("#registerUsersCityByText input").autocomplete({
       search: getCities,
-      minLength: 1
+      minLength: 2
     });
   });
 
@@ -35,16 +35,10 @@
   }
 
   function getCities() {
-
-    var text = $cityEl.val();
-    if (!text || !!_prevCitySearchText
-            && _prevCitySearchText.indexOf(text) !== -1) { return; }
-    _prevCitySearchText = text;
-
     var data = {
       lang: "ru",
       username: "kabacademy",
-      name_startsWith: text,
+      name_startsWith: $cityEl.val(),
       cities: "cities1000",
       country: selectedCountry.countryCode,
       type: "json"
