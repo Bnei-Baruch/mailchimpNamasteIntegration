@@ -1,10 +1,10 @@
 <?php
 class KabCustomRegistrationHelper {
 	public static function getUpdateProfileJSON() {
-		wp_die ( json_encode ( getUpdateProfile () ) );
+		wp_die ( json_encode ( self::getUpdateProfile () ) );
 	}
 	public static function setUpdateProfileJSON() {
-		wp_die ( json_encode ( setUpdateProfile () ) );
+		wp_die ( json_encode ( self::setUpdateProfile () ) );
 	}
 	public static function getUpdateProfile() {
 		$isShowDialog = false;
@@ -60,7 +60,7 @@ class KabCustomRegistrationHelper {
 		return $data;
 	}
 	public static function setUpdateProfile() {
-		$fieldList = self::getUserFieldList ( - 1 );
+		$fieldList = self::getUserFieldList ();
 		$fieldListWP = array ();
 		$fieldListBP = array ();
 		$return = array ();
