@@ -4,8 +4,8 @@
  */
 class UserAuthorizationHandler {
 	public static function initActions() {
-		add_action ( 'bp_core_activated_user', 'UserAuthorizationHandler::addToMailChimp', 100, 3 );
-		add_action ( 'wsl_process_login_create_wp_user_start', 'UserAuthorizationHandler::addToMailChimpFromHybrid', 99, 4 );
+		add_action ( 'bp_core_activated_user', 'UserAuthorizationHandler::addToMailChimp', 100, 3 );		
+		add_action ( 'wsl_process_login_create_wp_user_start', 'UserAuthorizationHandler::sendEmailFromHybrid', 10, 4 );
 		
 		// actions for change letters
 		// add_filter ( 'bp_core_signup_send_validation_email_message', 'UserAuthorizationHandler::activationMessage', 10, 3 );
@@ -13,10 +13,13 @@ class UserAuthorizationHandler {
 		add_filter ( 'retrieve_password_message', 'UserAuthorizationHandler::retrieveMessage', 10, 2 );
 		add_filter ( 'retrieve_password_title', 'UserAuthorizationHandler::retrieveTitle', 10, 1 );
 	}
-	public static function addToMailChimpFromHybrid($provider, $hybridauth_user_profile, $request_user_login, $request_user_email) {
+	public static function sendEmailFromHybrid($provider, $hybridauth_user_profile, $request_user_login, $request_user_email) {
+		if ($request_user_login != null) {
+			$hybridauth_user_profile->displayName =  $request_user_login;
+		}
 		self::sendEmail ( $request_user_email, $request_user_login, null, null );
 	}
-public static function addToMailChimp($user_id, $key, $user) {
+	public static function addToMailChimp($user_id, $key, $user) {
 		$user_pass = $user ['meta'] ['fieldListWP'] ['user_pass'];
 		if (is_numeric ( $user ['meta'] ['enrollToCourse'] )) {
 			self::enroll ( $user_id, $user ['meta'] ['enrollToCourse'] );
@@ -24,8 +27,16 @@ public static function addToMailChimp($user_id, $key, $user) {
 		KabCustomRegistrationHelper::setUserFieldList ( $user ['meta'] ['fieldListWP'], $user ['meta'] ['fieldListBP'], $user_id );
 		
 		$user = get_user_by ( 'id', $user_id );
-		self::sendEmail ($user->user_email, $user->display_name, $user_pass, $user->user_login );
-		// MailChimpActions::updateParams ( $user_id );
+		self::sendEmail ( $user->user_email, $user->display_name, $user_pass, $user->user_login );
+		updateDisplayName ( $user );
+	}
+	private static function updateDisplayName($user) {
+		if ($user->display_name != '') {			
+			$display_name = $user->first_name . ' ' . $user->last_name;
+			wp_update_user ( array (
+					display_name => $display_name 
+			) );
+		}
 	}
 	private static function sendEmail($user_email, $display_name, $user_pass, $user_login) {
 		if (! is_null ( $user_pass )) {

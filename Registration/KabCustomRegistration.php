@@ -57,17 +57,7 @@
 		 */
 		public static function register($userData = NULL) {
 			global $wpdb;
-			$fieldList = KabCustomRegistrationHelper::getUserFieldList ( - 1 );
-			
-			$msg = "test";
-			try {
-				$msg .= print_r ( $fieldList, true );
-				$msg .= print_r ( $userData, true );
-			} catch ( Exception $e ) {
-				$msg .= print_r ( $e, true );
-			}
-			MailchimpIntegrationUtilities::rightToLogFileDavgur ( $msg );
-			
+			$fieldList = KabCustomRegistrationHelper::getUserFieldList ( - 1 );			
 			$fieldListWP = array ();
 			$fieldListBP = array ();
 			$return = array ();
