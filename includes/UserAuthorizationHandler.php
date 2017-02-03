@@ -28,15 +28,6 @@ class UserAuthorizationHandler {
 		
 		$user = get_user_by ( 'id', $user_id );
 		self::sendEmail ( $user->user_email, $user->display_name, $user_pass, $user->user_login );
-		updateDisplayName ( $user );
-	}
-	private static function updateDisplayName($user) {
-		if ($user->display_name != '') {			
-			$display_name = $user->first_name . ' ' . $user->last_name;
-			wp_update_user ( array (
-					display_name => $display_name 
-			) );
-		}
 	}
 	private static function sendEmail($user_email, $display_name, $user_pass, $user_login) {
 		if (! is_null ( $user_pass )) {
