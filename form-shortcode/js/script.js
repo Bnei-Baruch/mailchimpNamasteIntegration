@@ -1,7 +1,7 @@
 (function($) {
   var templates = {};
-  var currentPath = location.origin
-          + '/wp-content/plugins/mailchimp-bp-integrator/includes';
+
+  var currentPath = mailchimpIntegratorPluginParams.path + '/includes';
 
   $(document).ready(function() {
     $("#registrationForm").on('click', '.submit', submitRegister);

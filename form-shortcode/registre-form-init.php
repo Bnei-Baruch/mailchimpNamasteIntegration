@@ -6,8 +6,13 @@ require_once REGFORM_DIR . './renderHtml.php';
 require_once MAILCHIMPINT_DIR . '/Registration/KabCustomRegistration.php';
 
 wp_enqueue_script ( 'handlebars', REGFORM_DIR_URL . '/js/handlebars.js' );
+
 wp_enqueue_script ( 'regFormJs', REGFORM_DIR_URL . '/js/script.js', array (
 		'jquery' 
+) );
+
+wp_localize_script ( 'regFormJs', 'mailchimpIntegratorPluginParams', array (
+		'path' => MAILCHIMPINT_DIR_URL 
 ) );
 wp_enqueue_script ( 'countrySelectBox', REGFORM_DIR_URL . '/js/countrySelectBox.js', array (
 		'jquery' 
