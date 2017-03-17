@@ -30,6 +30,7 @@ if (defined ( 'DOING_AJAX' ) && DOING_AJAX) {
 	add_action ( 'wp_ajax_nopriv_loginRregistrationFormShortcode', 'KabCustomRegistration::login', 30 );
 	add_action ( 'wp_ajax_getUpdateProfileRregistrationFormShortcode', 'KabCustomRegistrationHelper::getUpdateProfileJSON' );
 	add_action ( 'wp_ajax_setUpdateProfileRregistrationFormShortcode', 'KabCustomRegistrationHelper::setUpdateProfileJSON' );
+	add_action ( 'wp_ajax_removeAsyncProfile', 'KabCustomRegistration::remove' );
 	add_action ( 'wp', 'KabCustomRegistration::autoLogin' );
 }
 // add_action ( 'wp_ajax_nopriv_rememberRregistrationFormShortcode', 'KabCustomRegistrationHelper::remember', 30 );
@@ -38,6 +39,7 @@ add_action ( 'wp_ajax_fromExelRregistrationFormShortcode', 'KabCustomRegistratio
 function regForm_init() {
 	add_shortcode ( 'registerForm', 'registerForm_func' );
 	add_shortcode ( 'loginForm', 'loginForm_func' );
+	add_shortcode ( 'removeUser', 'remove_user_async' );
 }
 add_action ( 'wp', 'KabCustomRegistration::autoLogin' );
 ?>

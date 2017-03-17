@@ -178,6 +178,15 @@
 			return $return;
 		}
 		
+		public static function remove(){
+			$user  = wp_get_current_user();
+			if(is_null($user)){
+				return;
+			}
+			wp_delete_user($user->ID);
+			wp_redirect(home_url());			
+		} 
+		
 		/*
 		 * Private functions
 		 */

@@ -106,3 +106,6 @@ function loginForm_func($args) {
 	ob_end_clean ();
 	return $data;
 }
+function remove_user_async(){
+	return  '<a id="removeUserAsync">Удалить профиль</a>';
+}

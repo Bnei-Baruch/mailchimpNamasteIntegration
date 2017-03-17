@@ -7,6 +7,7 @@
     $("#registrationForm").on('click', '.submit', submitRegister);
     $("#loginForm").on('click', '.submit', submitLogin);
     $("#registerUsersFromExel").on('click', registerUsersFromExel);
+    $("#removeUserAsync").on('click', removeUserAsync);    
 
     // load js template and open dialog
     _loadTemplates();
@@ -25,6 +26,21 @@
      * Handlebars.compile('<div id="thankYou"><p>{{content}}</p></div>');
      */
   }
+  
+  function removeUserAsync(event) {
+      event.preventDefault();
+      $.ajax({
+        type: "POST",
+        url: ajaxurl,
+        data: {
+          action: 'removeAsyncProfile'
+        },
+        dataType: 'json'
+      }).done(function(data) {
+        alert("Polzovatel udalen");
+      });
+  }
+  
 
   function getThankYou(data) {
     var renderedHTML = $(templates.thankYou(data.message)).hide();
