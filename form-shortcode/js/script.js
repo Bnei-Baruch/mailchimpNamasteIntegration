@@ -37,7 +37,7 @@
         },
         dataType: 'json'
       }).done(function(data) {
-        alert("Polzovatel udalen");
+        window.location.reload();
       });
   }
   
