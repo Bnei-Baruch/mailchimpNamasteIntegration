@@ -61,9 +61,7 @@ $message = '<div style="font: 14px/20px Arial; padding: 15px 20px;max-width: 960
       src="' . MAILCHIMPINT_DIR_URL . '/includes/images/webinar.png"
       style="   float: left;margin: 0 10px 10px 0;border: 0 none;outline: none;width: 160px;" alt=""/>
     <p>
-      <span style="color: #00adef;font: bold 16px Arial;">Вебинар Михаэля Лайтмана</span> (входит в
-      программу курса “Основы каббалы.”)
-
+      <span style="color: #00adef;font: bold 16px Arial;">Вебинар Михаэля Лайтмана</span>
     </p>
     <p>
       <strong>Об этом курсе:</strong>
