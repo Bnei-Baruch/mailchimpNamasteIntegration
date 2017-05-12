@@ -90,6 +90,13 @@ class MailChimpActions {
 		$request = $sendObj->SendToMailChimp ();
 		return $request;
 	}
+
+	public static function subscribe($user_id) {
+		$user_obj = get_userdata ( $user_id );
+		$sendObj = new MailChimpSend ( 'setUserData', $user_obj->user_email );
+		$request = $sendObj->SendToMailChimp ();
+		return $request;
+	}
 	public static function synchronization_wp_user() {
 		/*
 		 * if(!is_user_logged_in() || get_user_meta(get_current_user_id(), 'updated_from_bp', true) == '1')

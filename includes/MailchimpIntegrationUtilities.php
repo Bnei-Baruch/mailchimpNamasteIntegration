@@ -30,6 +30,7 @@ class MailchimpIntegrationUtilities {
 	 *
 	 *
 	 *
+	 *
 	 * = print_r(print, true);
 	 * } catch (Exception $e) {
 	 * $msg .= print_r($e, true);
@@ -78,13 +79,16 @@ class MailchimpIntegrationUtilities {
 		}
 	}
 	public static function addToMailChimpByCourse($courseId) {
-		global $wpdb;
-		// just for davgur.ru@gmail.com
-		if (get_current_user_id () != 30) {
+		if (self::isNotDavgur ()) {
 			return;
 		}
-		$userIdList = $wpdb->get_results ( $wpdb->prepare ( "SELECT user_id FROM `wp_namaste_student_courses` WHERE course_id=%d", $courseId ) );
+		
+		$userIdList = self::usersIdsByCourseId ( $courseId );
 		self::addToMailChimpByUsers ( $userIdList, 0 );
+	}
+	public static function usersIdsByCourseId($courseId) {
+		global $wpdb;
+		return $wpdb->get_results ( $wpdb->prepare ( "SELECT user_id FROM `wp_namaste_student_courses` WHERE course_id=%d", $courseId ) );
 	}
 	public static function addToMailChimpByUsers($userIdList, $index) {
 		if (count ( $userIdList ) > $index) {
@@ -98,6 +102,10 @@ class MailchimpIntegrationUtilities {
 		} catch ( Exception $e ) {
 			return $e;
 		}
+	}
+	public static function isNotDavgur() {
+		// just for davgur.ru@gmail.com
+		return get_current_user_id () != 30;
 	}
 }
 ?>

@@ -22,6 +22,11 @@ if (is_admin ()) {
 	add_action ( 'admin_menu', 'mailChimpInt_init' );
 }
 
+//if (!MailchimpIntegrationUtilities::isNotDavgur()) {
+	require_once MAILCHIMPINT_DIR . '/adminScripts/AdminScriptShortcodes.php';
+	new MailchimpIntegrationAdminScripts();
+//}
+
 //Called actions 
 add_action ( 'mailchimp_send', 'synchronization_wp_user' );
 
