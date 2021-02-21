@@ -71,7 +71,7 @@ class MailchimpIntegrationUtilities {
 					}
 					// id of course for enroll
 					$arrOfData ['enrollToCourse'] = 1957;
-					RregistrationFormShortcode::register ( $arrOfData );
+					KabCustomRegistration::register ( $arrOfData );
 				}
 				$row ++;
 			}

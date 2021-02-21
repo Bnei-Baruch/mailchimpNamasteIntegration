@@ -85,3 +85,20 @@
 	width: 100%;
 	display: block;
 }
+.ui-widget.ui-widget-content{
+	z-index: 1000;
+}
+.page .ui-autocomplete.ui-menu{
+	z-index: 1000;
+	background: white;
+	max-height: 250px;
+	max-width: 400px;
+	overflow-y: auto;
+	border: 1px solid #d8d8d8;
+
+}
+.ui-autocomplete li{
+	list-style: none;
+	padding: 5px;
+	border-bottom: 1px solid #d8d8d8;
+}

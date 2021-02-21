@@ -1,4 +1,10 @@
 <?php
+if (! is_null ( $user_pass )) {
+	$passwordMsg = '<p>' . sprintf ( __ ( 'Username: %s' ), $user_login ) . '<br />' . __ ( 'Password' ) . ': ' . $user_pass . '</p>
+                    <p>Чтобы установить новый пароль, перейдите по ссылке: ' . wp_login_url ( home_url () . '/login/' ) . '&action=lostpassword</p>';
+} else {
+	$passwordMsg = '';
+}
 $message = '<div style="font: 14px/20px Arial; padding: 15px 20px;max-width: 960px; margin: 0 auto; background-color: #EFEFEF;">
   <div style="text-align: center">
     <a href="kabacademy.com">
@@ -7,14 +13,11 @@ $message = '<div style="font: 14px/20px Arial; padding: 15px 20px;max-width: 960
     </a>
   </div>
   <div style="margin: 20px 0; padding: 10px; border: 2px solid #00adef; border-radius: 5px;">
-    <p>' . $user->display_name . ', здравствуйте!</p>
+    <p>' . $display_name . ', здравствуйте!</p>
     <p>Вы зарегистрированы на сайте Международной академии каббалы,
       крупнейшем в мире учебно-образовательном, бесплатном и
       неограниченном источнике достоверной информации о науке каббала.</p>
-
-    <p>'.sprintf ( __ ( 'Username: %s' ), $user->user_login ).'<br/>'.__ ( 'Password' ) .': '. $user_pass . '</p>
-    <p>Чтобы установить новый пароль, перейдите по ссылке: ' . wp_login_url ( home_url () . '/login/' ) .
-      '&action=lostpassword</p>
+    ' . $passwordMsg . '
   </div>
   <div>
 
@@ -22,39 +25,6 @@ $message = '<div style="font: 14px/20px Arial; padding: 15px 20px;max-width: 960
       академии, чтобы вы могли использовать все возможности предлагаемого
       обучения.</p>
     <p>На сайте представлены различные курсы на выбор:</p>
-  </div>
-  <h2>Курсы дистанционного обучения</h2>
-  <div class="clearfix">
-    <img
-      src="' . MAILCHIMPINT_DIR_URL . '/includes/images/osnovy.png"
-      style="   float: left;margin: 0 10px 10px 0;border: 0 none;outline: none;width: 160px;" alt=""/>
-    <p>Онлайн-курс
-      <span style="color: #00adef;font: bold 16px Arial;">“Основы каббалы.”</span> - новый опыт в вашей жизни от самой
-      природы. На курсе вы
-      узнаете о строении мироздания, о силах, управляющих нашей природой,
-      нами и всем окружающим.</p>
-    <p>Аттестованные преподаватели в удобное время проведут вас по
-      основам каббалистической мудрости.
-    </p>
-  </div>
-  <div style="text-align: center">
-    <a href="http://kabacademy.com/online-course-lp/"
-       style="display: inline-block;padding: 10px 15px;font: 16px/30px Arial;border-radius: 2px;background-color: #e0922f;text-decoration: none;text-transform: uppercase;cursor: pointer;white-space: nowrap;color: #ffffff;">
-      Записаться на курс
-    </a>
-  </div>
-  <div class="clearfix">
-    <p>
-      <strong>Об этом курсе:</strong>
-    </p>
-    <ul style="list-style-position: inside;padding-left: 10px;">
-      <li>Базовое обучение — 10 недель</li>
-      <li>Занятия 2 раза в неделю
-      </li>
-      <li>Бесплатный доступ к оригинальным текстам</li>
-      <li>Возможность участия в онлайн-сообществе</li>
-      <li>Архив уроков в режиме свободного скачивания</li>
-    </ul>
   </div>
   <div class="clearfix">
     <img
@@ -151,13 +121,6 @@ $message = '<div style="font: 14px/20px Arial; padding: 15px 20px;max-width: 960
   </div>
   <div style="font-style: italic; margin: 50px 0 20px;">
     <ul style="list-style-position: inside;padding-left: 10px;">
-      <li>онлайн-курсы, помеченные флажком
-        <span style="color: #00adef;font: bold 16px Arial;">LIVE</span>,
-        позволят вам смотреть уроки в реальном времени, а также общаться с
-        преподавателями МАК и другими студентами, задавать вопросы и
-        получать на них ответы
-
-      </li>
       <li>курсы для самостоятельного обучения (*) дают возможность
         самим планировать свой график прохождения уроков и выбирать
         наиболее интересующие вас темы

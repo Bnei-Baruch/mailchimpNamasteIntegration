@@ -4,46 +4,39 @@
  */
 class UserAuthorizationHandler {
 	public static function initActions() {
-		add_action ( 'bp_core_activated_user', 'UserAuthorizationHandler::addToMailChimp', 100, 3 );
+		add_action ( 'bp_core_activated_user', 'UserAuthorizationHandler::addToMailChimp', 100, 3 );		
+		add_action ( 'wsl_process_login_create_wp_user_start', 'UserAuthorizationHandler::sendEmailFromHybrid', 10, 4 );
 		
 		// actions for change letters
-		
 		// add_filter ( 'bp_core_signup_send_validation_email_message', 'UserAuthorizationHandler::activationMessage', 10, 3 );
 		add_filter ( 'bp_core_signup_send_validation_email_subject', 'UserAuthorizationHandler::activationSubject', 10, 5 );
 		add_filter ( 'retrieve_password_message', 'UserAuthorizationHandler::retrieveMessage', 10, 2 );
 		add_filter ( 'retrieve_password_title', 'UserAuthorizationHandler::retrieveTitle', 10, 1 );
 	}
+	public static function sendEmailFromHybrid($provider, $hybridauth_user_profile, $request_user_login, $request_user_email) {
+		if ($request_user_login != null) {
+			$hybridauth_user_profile->displayName =  $request_user_login;
+		}
+		self::sendEmail ( $request_user_email, $request_user_login, null, null );
+	}
 	public static function addToMailChimp($user_id, $key, $user) {
 		$user_pass = $user ['meta'] ['fieldListWP'] ['user_pass'];
 		if (is_numeric ( $user ['meta'] ['enrollToCourse'] )) {
-			self::enroll ( $user_id, $user ['meta'] ['enrollToCourse']);
-		} 
-		self::sendEmail ( $user_id, $user_pass );
-		RregistrationFormShortcode::setUserFieldList ( $user ['meta'] ['fieldListWP'], $user ['meta'] ['fieldListBP'], $user_id );
-		// MailChimpActions::updateParams ( $user_id );
-	}
-	private function sendEmail($user_id, $user_pass) {
-		$user = get_user_by ( 'id', $user_id );
+			self::enroll ( $user_id, $user ['meta'] ['enrollToCourse'] );
+		}
+		KabCustomRegistrationHelper::setUserFieldList ( $user ['meta'] ['fieldListWP'], $user ['meta'] ['fieldListBP'], $user_id );
 		
-		$subject = 'Логин и пароль для сайта kabacademy.com.';
+		$user = get_user_by ( 'id', $user_id );
+		self::sendEmail ( $user->user_email, $user->display_name, $user_pass, $user->user_login );
+	}
+	private static function sendEmail($user_email, $display_name, $user_pass, $user_login) {
+		if (! is_null ( $user_pass )) {
+			$subject = 'Логин и пароль для сайта kabacademy.com.';
+		} else {
+			$subject = 'Регистрация на сайте kabacademy.com.';
+		}
 		include_once 'userAutorisationEmail.php';
-		self::send ( $message, $subject, $user->user_email );
-	}
-	private function sendEmailWithEnroll($user_id, $user_pass, $courseId) {
-		$user = get_user_by ( 'id', $user_id );
-		
-		self::enroll ( $user_id, $courseId );
-		
-		$subject = 'Логин и пароль для сайта kabacademy.com';
-		
-		$msg = 'Ваши данные для входа на сайте kabacademy.com:<br /><br />';
-		$msg .= 'Имя пользователя: ' . $user->user_email . '<br />';
-		$msg .= 'Новый пароль: ' . $user_pass . '<br /><br />';
-		$msg .= '<a href="' . get_site_url () . '/login">Авторизоваться на сайте >></a><br /><br />';
-		$msg .= 'Чтобы установить новый пароль, перейдите по ссылке: ' . wp_login_url ( home_url () . '/login/' ) . '&action=lostpassword';
-		$msg .= '<br /><br />';
-		
-		self::send ( $msg, $subject, $user->user_email );
+		self::send ( $message, $subject, $user_email );
 	}
 	private static function enroll($userId, $courseId) {
 		$_course = new NamasteLMSCourseModel ();
